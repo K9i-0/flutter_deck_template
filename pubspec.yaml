@@ -1,0 +1,25 @@
+name: flutter_deck_template
+description: A Flutter Deck presentation template for creating slides with Claude Code.
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_deck: ^0.22.0
+  flutter_deck_web_client: ^0.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
