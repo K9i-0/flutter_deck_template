@@ -10,8 +10,12 @@ flutter_deckを使用した登壇スライドテンプレート。Claude Codeと
 # Webでプレビュー
 flutter run -d chrome
 
+# macOSでプレビュー
+flutter run -d macos
+
 # リリースビルド
 flutter build web --release
+flutter build macos --release
 
 # 依存関係の取得
 flutter pub get

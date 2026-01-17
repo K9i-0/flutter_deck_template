@@ -1,13 +1,21 @@
 [tools]
-flutter = "3.32.0-stable"
+flutter = "3.38.7-stable"
 
 [tasks.dev]
 description = "Run Flutter app on Chrome"
 run = "flutter run -d chrome"
 
+[tasks.dev-macos]
+description = "Run Flutter app on macOS"
+run = "flutter run -d macos"
+
 [tasks.build]
 description = "Build for web release"
 run = "flutter build web --release"
+
+[tasks.build-macos]
+description = "Build for macOS release"
+run = "flutter build macos --release"
 
 [tasks.analyze]
 description = "Run Flutter analyzer"
