@@ -1,2 +1,18 @@
 [tools]
 flutter = "3.32.0-stable"
+
+[tasks.dev]
+description = "Run Flutter app on Chrome"
+run = "flutter run -d chrome"
+
+[tasks.build]
+description = "Build for web release"
+run = "flutter build web --release"
+
+[tasks.analyze]
+description = "Run Flutter analyzer"
+run = "flutter analyze"
+
+[tasks.get]
+description = "Get dependencies"
+run = "flutter pub get"

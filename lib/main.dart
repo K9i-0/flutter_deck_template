@@ -19,27 +19,10 @@ class PresentationApp extends StatelessWidget {
       configuration: FlutterDeckConfiguration(
         slideSize: PresentationConfig.slideSize,
         transition: PresentationConfig.transition,
-        background: PresentationConfig.darkBackground,
+        background: PresentationConfig.backgroundConfiguration,
         header: PresentationConfig.headerConfiguration,
-        footer: PresentationConfig.footerConfiguration(
-          socialHandle: SpeakerInfo.socialHandle,
-        ),
+        footer: PresentationConfig.footerConfiguration,
         progressIndicator: PresentationConfig.progressIndicator,
-        controls: const FlutterDeckControlsConfiguration(
-          shortcuts: FlutterDeckShortcutsConfiguration(
-            enabled: true,
-            nextSlide: SingleActivator(LogicalKeyboardKey.arrowRight),
-            previousSlide: SingleActivator(LogicalKeyboardKey.arrowLeft),
-            toggleMarker: SingleActivator(
-              LogicalKeyboardKey.keyM,
-              control: true,
-            ),
-            toggleNavigationDrawer: SingleActivator(
-              LogicalKeyboardKey.period,
-              control: true,
-            ),
-          ),
-        ),
         marker: const FlutterDeckMarkerConfiguration(
           color: Color(0xFFef4444),
           strokeWidth: 4,
@@ -48,12 +31,14 @@ class PresentationApp extends StatelessWidget {
       lightTheme: ThemeConfig.lightTheme,
       darkTheme: ThemeConfig.darkTheme,
       themeMode: ThemeMode.dark,
-      speakerInfo: FlutterDeckSpeakerInfo(
-        name: SpeakerInfo.name,
-        description: SpeakerInfo.description,
-        socialHandle: SpeakerInfo.socialHandle,
-        imagePath: SpeakerInfo.avatarPath,
-      ),
+      speakerInfo: SpeakerInfo.avatarPath != null
+          ? FlutterDeckSpeakerInfo(
+              name: SpeakerInfo.name,
+              description: SpeakerInfo.description,
+              socialHandle: SpeakerInfo.socialHandle,
+              imagePath: SpeakerInfo.avatarPath!,
+            )
+          : null,
       slides: const [
         TitleSlide(),
         AboutSlide(),

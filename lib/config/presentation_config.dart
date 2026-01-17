@@ -6,7 +6,11 @@ class PresentationConfig {
   PresentationConfig._();
 
   /// Slide size configuration (16:9 aspect ratio, FHD).
-  static const slideSize = FlutterDeckSlideSize.ratio16x9;
+  static FlutterDeckSlideSize get slideSize =>
+      FlutterDeckSlideSize.fromAspectRatio(
+        aspectRatio: FlutterDeckAspectRatio.ratio16x9(),
+        resolution: FlutterDeckResolution.fhd(),
+      );
 
   /// Default transition between slides.
   static const transition = FlutterDeckTransition.fade();
@@ -28,28 +32,31 @@ class PresentationConfig {
   /// Background configuration for dark theme.
   static FlutterDeckBackground get darkBackground {
     return FlutterDeckBackground.gradient(
-      LinearGradient(
+      const LinearGradient(
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          const Color(0xFF1a1a2e),
-          const Color(0xFF16213e),
+          Color(0xFF1a1a2e),
+          Color(0xFF16213e),
         ],
       ),
     );
   }
 
-  /// Footer configuration.
-  static FlutterDeckFooterConfiguration footerConfiguration({
-    required String socialHandle,
-  }) {
-    return FlutterDeckFooterConfiguration(
-      showFooter: true,
-      showSlideNumbers: true,
-      showSocialHandle: true,
-      socialHandle: socialHandle,
+  /// Background configuration.
+  static FlutterDeckBackgroundConfiguration get backgroundConfiguration {
+    return FlutterDeckBackgroundConfiguration(
+      light: lightBackground,
+      dark: darkBackground,
     );
   }
+
+  /// Footer configuration.
+  static const footerConfiguration = FlutterDeckFooterConfiguration(
+    showFooter: true,
+    showSlideNumbers: true,
+    showSocialHandle: true,
+  );
 
   /// Header configuration.
   static const headerConfiguration = FlutterDeckHeaderConfiguration(

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 
 class ClaudeIntegrationSlide extends FlutterDeckSlideWidget {
