@@ -79,13 +79,24 @@ class MaestroMcpSlide extends FlutterDeckSlideWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Flutter側',
-                          style: theme.textTheme.bodySmall.copyWith(
-                            color: theme.materialTheme.colorScheme.primary,
-                          ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.accessibility_new,
+                              size: 18,
+                              color: theme.materialTheme.colorScheme.primary,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Semantics = UIの名札',
+                              style: theme.textTheme.bodySmall.copyWith(
+                                color: theme.materialTheme.colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 12),
                         Text(
                           '''Semantics(
   identifier: 'submit-button',
@@ -93,6 +104,14 @@ class MaestroMcpSlide extends FlutterDeckSlideWidget {
 )''',
                           style: theme.textTheme.bodySmall.copyWith(
                             fontFamily: 'monospace',
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '※ アクセシビリティ機能を活用',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: theme.materialTheme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],

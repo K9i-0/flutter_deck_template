@@ -34,10 +34,22 @@ class McpSolutionSlide extends FlutterDeckSlideWidget {
                 color: theme.materialTheme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Text(
-                'AIとツールを繋ぐ\n標準プロトコル',
-                style: theme.textTheme.bodyLarge,
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  Text(
+                    'AIがアプリを操作するための\n標準プロトコル',
+                    style: theme.textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'サーバー・クライアント形式で\nツール機能を公開',
+                    style: theme.textTheme.bodySmall.copyWith(
+                      color: theme.materialTheme.colorScheme.onSurfaceVariant,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 32),

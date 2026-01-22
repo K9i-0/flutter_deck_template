@@ -23,6 +23,13 @@ class WorkflowSlide extends FlutterDeckSlideWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'フィードバックループの実装',
+              style: theme.textTheme.bodyMedium.copyWith(
+                color: theme.materialTheme.colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
