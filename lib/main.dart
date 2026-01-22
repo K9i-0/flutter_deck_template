@@ -46,6 +46,8 @@ class PresentationApp extends StatelessWidget {
         SlideTypesSlide(),
         ClaudeIntegrationSlide(),
         HowToUseSlide(),
+        // CodeHighlightSlide(),
+        // InteractiveCounterSlide(),
         ThankYouSlide(),
       ],
     );
