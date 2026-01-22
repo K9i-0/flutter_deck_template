@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
   flutter_deck: ^0.22.0
   flutter_deck_web_client: ^0.4.0
+  marionette_flutter: ^0.2.4
 
 dev_dependencies:
   flutter_test:

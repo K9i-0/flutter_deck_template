@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 
-class ClaudeIntegrationSlide extends FlutterDeckSlideWidget {
-  const ClaudeIntegrationSlide()
+class FeedbackLoopSlide extends FlutterDeckSlideWidget {
+  const FeedbackLoopSlide()
       : super(
           configuration: const FlutterDeckSlideConfiguration(
-            route: '/claude-integration',
-            title: 'Claude Integration',
+            route: '/feedback-loop',
+            title: 'Feedback Loop',
           ),
         );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
     return FlutterDeckSlide.bigFact(
-      title: 'Claude Code',
-      subtitle: 'スキル機能でスライド作成を自動化',
+      title: 'フィードバックループ\nが重要',
+      subtitle: 'Claude Code作者: 自己検証能力が生産性向上の鍵',
     );
   }
 }

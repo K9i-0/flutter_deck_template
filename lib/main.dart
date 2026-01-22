@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
+import 'package:marionette_flutter/marionette_flutter.dart';
 
 import 'config/presentation_config.dart';
 import 'config/speaker_info.dart';
@@ -7,6 +9,9 @@ import 'config/theme_config.dart';
 import 'slides/slides.dart';
 
 void main() {
+  if (kDebugMode) {
+    MarionetteBinding.ensureInitialized();
+  }
   runApp(const PresentationApp());
 }
 
@@ -41,13 +46,19 @@ class PresentationApp extends StatelessWidget {
           : null,
       slides: const [
         TitleSlide(),
-        AboutSlide(),
-        FeaturesSlide(),
-        SlideTypesSlide(),
-        ClaudeIntegrationSlide(),
-        HowToUseSlide(),
-        // CodeHighlightSlide(),
-        // InteractiveCounterSlide(),
+        SelfIntroSlide(),
+        AiDrivenDevSlide(),
+        NextStageSlide(),
+        PairProgrammingSlide(),
+        TeamDelegationSlide(),
+        HumanAnalogySlide(),
+        FeedbackLoopSlide(),
+        FlutterChallengeSlide(),
+        McpSolutionSlide(),
+        MaestroMcpSlide(),
+        DartMcpSlide(),
+        WorkflowSlide(),
+        DemoSlide(),
         ThankYouSlide(),
       ],
     );
