@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 
+import '../components/video_slide_content.dart';
+
 class DemoSlide extends FlutterDeckSlideWidget {
   const DemoSlide()
       : super(
@@ -95,29 +97,11 @@ class DemoSlide extends FlutterDeckSlideWidget {
                     color: theme.materialTheme.colorScheme.outline,
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.phone_android,
-                      size: 120,
-                      color: theme.materialTheme.colorScheme.primary,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'デモ画面',
-                      style: theme.textTheme.bodyLarge.copyWith(
-                        color: theme.materialTheme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '(実際のデモまたはGIF)',
-                      style: theme.textTheme.bodySmall.copyWith(
-                        color: theme.materialTheme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: const VideoSlideContent(
+                    assetPath: 'assets/videos/sample.mov',
+                  ),
                 ),
               ),
             ),
