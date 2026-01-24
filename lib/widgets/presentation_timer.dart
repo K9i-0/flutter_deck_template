@@ -2,6 +2,56 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+enum TimerSize {
+  small(
+    label: 'S',
+    fontSize: 14,
+    iconSize: 16,
+    expandIconSize: 14,
+    paddingH: 12,
+    paddingV: 6,
+    spacing: 6,
+  ),
+  medium(
+    label: 'M',
+    fontSize: 24,
+    iconSize: 26,
+    expandIconSize: 20,
+    paddingH: 16,
+    paddingV: 10,
+    spacing: 8,
+  ),
+  large(
+    label: 'L',
+    fontSize: 36,
+    iconSize: 38,
+    expandIconSize: 28,
+    paddingH: 20,
+    paddingV: 14,
+    spacing: 10,
+  );
+
+  const TimerSize({
+    required this.label,
+    required this.fontSize,
+    required this.iconSize,
+    required this.expandIconSize,
+    required this.paddingH,
+    required this.paddingV,
+    required this.spacing,
+  });
+
+  final String label;
+  final double fontSize;
+  final double iconSize;
+  final double expandIconSize;
+  final double paddingH;
+  final double paddingV;
+  final double spacing;
+
+  TimerSize get next => TimerSize.values[(index + 1) % TimerSize.values.length];
+}
+
 class PresentationTimer extends StatefulWidget {
   const PresentationTimer({super.key});
 
@@ -14,6 +64,7 @@ class _PresentationTimerState extends State<PresentationTimer> {
   late final Timer _timer;
   bool _isVisible = true;
   bool _showMenu = false;
+  TimerSize _size = TimerSize.small;
 
   bool get _isRunning => _stopwatch.isRunning;
 
@@ -63,6 +114,13 @@ class _PresentationTimerState extends State<PresentationTimer> {
     });
   }
 
+  void _cycleSize() {
+    setState(() {
+      _size = _size.next;
+      _showMenu = false;
+    });
+  }
+
   String _formatDuration(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -101,7 +159,10 @@ class _PresentationTimerState extends State<PresentationTimer> {
         GestureDetector(
           onTap: _toggleMenu,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: EdgeInsets.symmetric(
+              horizontal: _size.paddingH,
+              vertical: _size.paddingV,
+            ),
             decoration: BoxDecoration(
               color: Colors.black.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(8),
@@ -112,23 +173,23 @@ class _PresentationTimerState extends State<PresentationTimer> {
                 Icon(
                   _isRunning ? Icons.timer_outlined : Icons.pause_rounded,
                   color: _isRunning ? Colors.white : Colors.orange,
-                  size: 16,
+                  size: _size.iconSize,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: _size.spacing),
                 Text(
                   _formatDuration(_stopwatch.elapsed),
                   style: TextStyle(
                     color: _isRunning ? Colors.white : Colors.orange,
-                    fontSize: 14,
+                    fontSize: _size.fontSize,
                     fontWeight: FontWeight.w500,
                     fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: _size.spacing * 0.6),
                 Icon(
                   _showMenu ? Icons.expand_less : Icons.expand_more,
                   color: Colors.white54,
-                  size: 14,
+                  size: _size.expandIconSize,
                 ),
               ],
             ),
@@ -153,6 +214,11 @@ class _PresentationTimerState extends State<PresentationTimer> {
                   icon: Icons.refresh_rounded,
                   label: 'リセット',
                   onTap: _resetTimer,
+                ),
+                _MenuButton(
+                  icon: Icons.text_fields_rounded,
+                  label: 'サイズ: ${_size.label} → ${_size.next.label}',
+                  onTap: _cycleSize,
                 ),
                 const Divider(height: 1, color: Colors.white24),
                 _MenuButton(
