@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/slide_navigation.dart';
 
 enum TimerSize {
   small(
@@ -156,44 +159,55 @@ class _PresentationTimerState extends State<PresentationTimer> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        GestureDetector(
-          onTap: _toggleMenu,
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: _size.paddingH,
-              vertical: _size.paddingV,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.7),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _isRunning ? Icons.timer_outlined : Icons.pause_rounded,
-                  color: _isRunning ? Colors.white : Colors.orange,
-                  size: _size.iconSize,
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Timer
+            GestureDetector(
+              onTap: _toggleMenu,
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: _size.paddingH,
+                  vertical: _size.paddingV,
                 ),
-                SizedBox(width: _size.spacing),
-                Text(
-                  _formatDuration(_stopwatch.elapsed),
-                  style: TextStyle(
-                    color: _isRunning ? Colors.white : Colors.orange,
-                    fontSize: _size.fontSize,
-                    fontWeight: FontWeight.w500,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                  ),
+                decoration: BoxDecoration(
+                  color: Colors.black.withValues(alpha: 0.7),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                SizedBox(width: _size.spacing * 0.6),
-                Icon(
-                  _showMenu ? Icons.expand_less : Icons.expand_more,
-                  color: Colors.white54,
-                  size: _size.expandIconSize,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      _isRunning ? Icons.timer_outlined : Icons.pause_rounded,
+                      color: _isRunning ? Colors.white : Colors.orange,
+                      size: _size.iconSize,
+                    ),
+                    SizedBox(width: _size.spacing),
+                    Text(
+                      _formatDuration(_stopwatch.elapsed),
+                      style: TextStyle(
+                        color: _isRunning ? Colors.white : Colors.orange,
+                        fontSize: _size.fontSize,
+                        fontWeight: FontWeight.w500,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    SizedBox(width: _size.spacing * 0.6),
+                    Icon(
+                      _showMenu ? Icons.expand_less : Icons.expand_more,
+                      color: Colors.white54,
+                      size: _size.expandIconSize,
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+            // Navigation buttons (debug mode only)
+            if (kDebugMode) ...[
+              const SizedBox(width: 8),
+              _NavigationButtons(size: _size),
+            ],
+          ],
         ),
         if (_showMenu) ...[
           const SizedBox(height: 4),
@@ -267,6 +281,50 @@ class _MenuButton extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _NavigationButtons extends StatelessWidget {
+  const _NavigationButtons({required this.size});
+
+  final TimerSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: size.paddingH * 0.5,
+        vertical: size.paddingV,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.black.withValues(alpha: 0.7),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            key: const ValueKey('nav_previous'),
+            onTap: SlideNavigation.previous,
+            child: Icon(
+              Icons.chevron_left_rounded,
+              color: Colors.white,
+              size: size.iconSize,
+            ),
+          ),
+          SizedBox(width: size.spacing * 0.5),
+          GestureDetector(
+            key: const ValueKey('nav_next'),
+            onTap: SlideNavigation.next,
+            child: Icon(
+              Icons.chevron_right_rounded,
+              color: Colors.white,
+              size: size.iconSize,
+            ),
+          ),
+        ],
       ),
     );
   }

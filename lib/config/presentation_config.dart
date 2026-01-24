@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 
+import '../utils/slide_navigation.dart';
+
 /// Presentation configuration for Flutter Deck.
 class PresentationConfig {
   PresentationConfig._();
@@ -15,30 +17,44 @@ class PresentationConfig {
   /// Default transition between slides.
   static const transition = FlutterDeckTransition.fade();
 
+  /// Light theme gradient.
+  static const lightGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Colors.white,
+      Color(0xFFF5F5F5),
+    ],
+  );
+
+  /// Dark theme gradient.
+  static const darkGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFF1a1a2e),
+      Color(0xFF16213e),
+    ],
+  );
+
   /// Background configuration for light theme.
   static FlutterDeckBackground get lightBackground {
-    return FlutterDeckBackground.gradient(
-      LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Colors.white,
-          Colors.grey.shade100,
-        ],
+    return FlutterDeckBackground.custom(
+      child: SlideNavigationRegistrar(
+        child: DecoratedBox(
+          decoration: const BoxDecoration(gradient: lightGradient),
+        ),
       ),
     );
   }
 
   /// Background configuration for dark theme.
   static FlutterDeckBackground get darkBackground {
-    return FlutterDeckBackground.gradient(
-      const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color(0xFF1a1a2e),
-          Color(0xFF16213e),
-        ],
+    return FlutterDeckBackground.custom(
+      child: SlideNavigationRegistrar(
+        child: const DecoratedBox(
+          decoration: BoxDecoration(gradient: darkGradient),
+        ),
       ),
     );
   }
