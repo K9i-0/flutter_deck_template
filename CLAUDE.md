@@ -4,7 +4,37 @@
 
 flutter_deckを使用した登壇スライドテンプレート。Claude Codeと連携してスライドを簡単に作成・編集できる。
 
-## コマンド
+## 動作確認・開発
+
+> **重要**: 動作確認は **marionette MCP** を優先して使用すること。
+> ユーザーが既にアプリを起動している場合が多いため、まず接続を試みる。
+
+### UI検証（marionette MCP）【優先】
+
+スライドの動作確認・スクリーンショット取得はmarionette MCPを使用する。
+
+**接続手順:**
+1. 起動中のFlutterアプリを確認
+   ```bash
+   lsof -i -P -n | grep flutter_d | grep LISTEN
+   ```
+2. ポート番号を取得して接続
+   ```
+   mcp__marionette__connect: ws://127.0.0.1:<PORT>/ws
+   ```
+3. VS Codeから起動する場合は `--disable-service-auth-codes` が自動で付与される（launch.json設定済み）
+
+**スライド操作:**
+- **スクリーンショット**: `mcp__marionette__take_screenshots`
+- **次のスライド**: `mcp__marionette__tap` with `key: "nav_next"`
+- **前のスライド**: `mcp__marionette__tap` with `key: "nav_previous"`
+- **ホットリロード**: `mcp__marionette__hot_reload`
+
+**注意事項:**
+- ナビゲーションボタン（`< >`）は `kDebugMode` の時のみ表示される
+- タイマー左上に表示されるナビゲーションを使用してスライド移動
+
+### アプリ起動コマンド（marionette接続不可時のみ）
 
 ```bash
 # Webでプレビュー
@@ -12,7 +42,11 @@ flutter run -d chrome
 
 # macOSでプレビュー
 flutter run -d macos
+```
 
+### その他のコマンド
+
+```bash
 # リリースビルド
 flutter build web --release
 flutter build macos --release
@@ -109,28 +143,3 @@ static const String socialHandle = '@your_handle';
 
 mainブランチにpushすると自動デプロイ。
 
-## UI検証（marionette MCP）
-
-### 接続手順
-
-1. ユーザーが既にFlutterアプリを起動しているか確認
-   ```bash
-   lsof -i -P -n | grep flutter_d | grep LISTEN
-   ```
-2. ポート番号を取得して接続
-   ```
-   mcp__marionette__connect: ws://127.0.0.1:<PORT>/ws
-   ```
-3. VS Codeから起動する場合は `--disable-service-auth-codes` が自動で付与される（launch.json設定済み）
-
-### スライド操作
-
-- **スクリーンショット**: `mcp__marionette__take_screenshots`
-- **次のスライド**: `mcp__marionette__tap` with `key: "nav_next"`
-- **前のスライド**: `mcp__marionette__tap` with `key: "nav_previous"`
-- **ホットリロード**: `mcp__marionette__hot_reload`
-
-### 注意事項
-
-- ナビゲーションボタン（`< >`）は `kDebugMode` の時のみ表示される
-- タイマー左上に表示されるナビゲーションを使用してスライド移動
