@@ -108,3 +108,29 @@ static const String socialHandle = '@your_handle';
 ## GitHub Pagesへのデプロイ
 
 mainブランチにpushすると自動デプロイ。
+
+## UI検証（marionette MCP）
+
+### 接続手順
+
+1. ユーザーが既にFlutterアプリを起動しているか確認
+   ```bash
+   lsof -i -P -n | grep flutter_d | grep LISTEN
+   ```
+2. ポート番号を取得して接続
+   ```
+   mcp__marionette__connect: ws://127.0.0.1:<PORT>/ws
+   ```
+3. VS Codeから起動する場合は `--disable-service-auth-codes` が自動で付与される（launch.json設定済み）
+
+### スライド操作
+
+- **スクリーンショット**: `mcp__marionette__take_screenshots`
+- **次のスライド**: `mcp__marionette__tap` with `key: "nav_next"`
+- **前のスライド**: `mcp__marionette__tap` with `key: "nav_previous"`
+- **ホットリロード**: `mcp__marionette__hot_reload`
+
+### 注意事項
+
+- ナビゲーションボタン（`< >`）は `kDebugMode` の時のみ表示される
+- タイマー左上に表示されるナビゲーションを使用してスライド移動
