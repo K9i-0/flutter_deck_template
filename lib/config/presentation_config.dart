@@ -10,8 +10,8 @@ class PresentationConfig {
   /// Slide size configuration (16:9 aspect ratio, FHD).
   static FlutterDeckSlideSize get slideSize =>
       FlutterDeckSlideSize.fromAspectRatio(
-        aspectRatio: FlutterDeckAspectRatio.ratio16x9(),
-        resolution: FlutterDeckResolution.fhd(),
+        aspectRatio: const FlutterDeckAspectRatio.ratio16x9(),
+        resolution: const FlutterDeckResolution.fhd(),
       );
 
   /// Default transition between slides.
@@ -21,40 +21,30 @@ class PresentationConfig {
   static const lightGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Colors.white,
-      Color(0xFFF5F5F5),
-    ],
+    colors: [Colors.white, Color(0xFFF5F5F5)],
   );
 
   /// Dark theme gradient.
   static const darkGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      Color(0xFF1a1a2e),
-      Color(0xFF16213e),
-    ],
+    colors: [Color(0xFF1a1a2e), Color(0xFF16213e)],
   );
 
   /// Background configuration for light theme.
   static FlutterDeckBackground get lightBackground {
-    return FlutterDeckBackground.custom(
+    return const FlutterDeckBackground.custom(
       child: SlideNavigationRegistrar(
-        child: DecoratedBox(
-          decoration: const BoxDecoration(gradient: lightGradient),
-        ),
+        child: DecoratedBox(decoration: BoxDecoration(gradient: lightGradient)),
       ),
     );
   }
 
   /// Background configuration for dark theme.
   static FlutterDeckBackground get darkBackground {
-    return FlutterDeckBackground.custom(
+    return const FlutterDeckBackground.custom(
       child: SlideNavigationRegistrar(
-        child: const DecoratedBox(
-          decoration: BoxDecoration(gradient: darkGradient),
-        ),
+        child: DecoratedBox(decoration: BoxDecoration(gradient: darkGradient)),
       ),
     );
   }
@@ -71,7 +61,7 @@ class PresentationConfig {
   static const footerConfiguration = FlutterDeckFooterConfiguration(
     showFooter: true,
     showSlideNumbers: true,
-    showSocialHandle: true,
+    showSocialHandle: false,
   );
 
   /// Header configuration.
@@ -81,11 +71,6 @@ class PresentationConfig {
 
   /// Progress indicator configuration.
   static const progressIndicator = FlutterDeckProgressIndicator.gradient(
-    gradient: LinearGradient(
-      colors: [
-        Color(0xFF6366f1),
-        Color(0xFF8b5cf6),
-      ],
-    ),
+    gradient: LinearGradient(colors: [Color(0xFF6366f1), Color(0xFF8b5cf6)]),
   );
 }
