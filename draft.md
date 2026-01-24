@@ -4,13 +4,19 @@ maestro mcpでFlutterアプリでもフィードバックループを回そう
 
 ## 自己紹介
 
-Twitterプロフ
-
+- Twitterプロフ
+- 最近書いたzennの記事
 - FlutterGakkaiは第4回以来の登壇
   - Riverpodに機能追加したときの話 (long ver.)
   - <https://fluttergakkai.connpass.com/event/284732/>
 
 ## 導入
+
+- デモ動画
+
+ここから旧
+
+## Q導入
 
 - AI駆動開発してますか？
 - 私は
