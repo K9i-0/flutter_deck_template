@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 
 import '../utils/slide_navigation.dart';
+import 'theme_config.dart';
 
 /// Presentation configuration for Flutter Deck.
 class PresentationConfig {
@@ -24,11 +25,11 @@ class PresentationConfig {
     colors: [Colors.white, Color(0xFFF5F5F5)],
   );
 
-  /// Dark theme gradient.
+  /// Dark theme gradient (monochrome).
   static const darkGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1a1a2e), Color(0xFF16213e)],
+    colors: [ThemeConfig.background, ThemeConfig.surface],
   );
 
   /// Background configuration for light theme.
@@ -69,8 +70,10 @@ class PresentationConfig {
     showHeader: false,
   );
 
-  /// Progress indicator configuration.
+  /// Progress indicator configuration (blue gradient).
   static const progressIndicator = FlutterDeckProgressIndicator.gradient(
-    gradient: LinearGradient(colors: [Color(0xFF6366f1), Color(0xFF8b5cf6)]),
+    gradient: LinearGradient(
+      colors: [ThemeConfig.accentBlue, ThemeConfig.accentBlueLight],
+    ),
   );
 }

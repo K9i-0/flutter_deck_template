@@ -34,7 +34,7 @@ class PresentationApp extends StatelessWidget {
               footer: PresentationConfig.footerConfiguration,
               progressIndicator: PresentationConfig.progressIndicator,
               marker: const FlutterDeckMarkerConfiguration(
-                color: Color(0xFFef4444),
+                color: ThemeConfig.accentBlue,
                 strokeWidth: 4,
               ),
             ),
