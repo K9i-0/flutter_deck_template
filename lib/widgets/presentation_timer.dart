@@ -156,7 +156,7 @@ class _PresentationTimerState extends State<PresentationTimer> {
     }
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
         Row(
