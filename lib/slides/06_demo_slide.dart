@@ -8,7 +8,6 @@ class DemoSlide extends FlutterDeckSlideWidget {
             route: '/demo',
             title: 'Demo',
             header: FlutterDeckHeaderConfiguration(title: 'デモ'),
-            initial: true,
           ),
         );
 

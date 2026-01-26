@@ -54,6 +54,8 @@ class PresentationApp extends StatelessWidget {
               AiPowerSlide(),
               FeedbackLoopDefinitionSlide(),
               DemoSlide(),
+              MainTopicSlide(),
+              UiVerificationArchitectureSlide(),
             ],
           ),
           const Positioned(top: 16, left: 16, child: PresentationTimer()),
