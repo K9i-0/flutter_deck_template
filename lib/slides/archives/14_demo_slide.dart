@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
-
-import '../components/video_slide_content.dart';
+import 'package:flutter_deck_template/components/video_slide_content.dart';
 
 class DemoSlide extends FlutterDeckSlideWidget {
-  const DemoSlide()
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/demo',
-            title: 'Demo',
-            header: FlutterDeckHeaderConfiguration(
-              title: 'デモ / 実例',
-            ),
-          ),
-        );
+  const DemoSlide({super.key})
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/demo',
+          title: 'Demo',
+          header: FlutterDeckHeaderConfiguration(title: 'デモ / 実例'),
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -29,17 +26,9 @@ class DemoSlide extends FlutterDeckSlideWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'TODOアプリでの検証',
-                    style: theme.textTheme.subtitle,
-                  ),
+                  Text('TODOアプリでの検証', style: theme.textTheme.subtitle),
                   const SizedBox(height: 24),
-                  _buildDemoItem(
-                    context,
-                    '1',
-                    'タスク依頼',
-                    '画像添付機能を追加して',
-                  ),
+                  _buildDemoItem(context, '1', 'タスク依頼', '画像添付機能を追加して'),
                   const SizedBox(height: 16),
                   _buildDemoItem(
                     context,
@@ -48,19 +37,9 @@ class DemoSlide extends FlutterDeckSlideWidget {
                     'Plan → 実装 → テスト → レビュー',
                   ),
                   const SizedBox(height: 16),
-                  _buildDemoItem(
-                    context,
-                    '3',
-                    'E2E確認',
-                    'Maestro MCPでUI操作・検証',
-                  ),
+                  _buildDemoItem(context, '3', 'E2E確認', 'Maestro MCPでUI操作・検証'),
                   const SizedBox(height: 16),
-                  _buildDemoItem(
-                    context,
-                    '4',
-                    '完了報告',
-                    'スクリーンショット付きで報告',
-                  ),
+                  _buildDemoItem(context, '4', '完了報告', 'スクリーンショット付きで報告'),
                   const SizedBox(height: 32),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -91,7 +70,8 @@ class DemoSlide extends FlutterDeckSlideWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.materialTheme.colorScheme.surfaceContainerHighest,
+                  color:
+                      theme.materialTheme.colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: theme.materialTheme.colorScheme.outline,
