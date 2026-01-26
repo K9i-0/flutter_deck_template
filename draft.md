@@ -12,9 +12,17 @@ Flutterアプリ開発でもUI検証のフィードバックループを回そ�
 
 ## 導入
 
-### AI駆動開発が当たり前になった
+<!-- ### AI駆動開発が当たり前になった
 
-Claude Code、Cursor、Codex CLI ...
+Claude Code、Cursor、Codex CLI ... -->
+
+### AI駆動開発してますか？
+
+- 私は
+  - 9割くらいAIエージェントに書かせてる(制約がややこしいUI組むときとかだけ手書き)
+  - Claude Code + VS Code
+    - Claude Code：基本全部
+    - VS Code：エディタは手書きするときにしか開かないので、慣れてるVS CodeであえてAI機能は使わず利用
 
 ### AIの力をもっと引き出したい…
 
@@ -54,19 +62,6 @@ Claude Codeの開発者が最も重要と言っていること
     - Claude Codeが始めた機能（Skills, subagentなど）を他ツールが後追いし、業界標準になる流れ
   - GoogleのツールがFlutterと相性いいとか正直無い
     - Gemini CLIもAntigravityも現状手を出さなくていい
-
-### 個人的AIツール遷移（消すかも）
-
-- GitHub Copilotが話題になり始めたことからゆるく利用
-  - Tab補完、Chat
-- Cursor
-  - 会社で導入されて使い始める
-  - 引き続きTab補完、Chatの緩めの利用
-  - Anthropicのモデルめちゃくちゃ賢いことに気づく
-- Claude CodeがMaxプランで定額利用になったと話題に
-  - CursorでAnthropicええやんとなってたので個人で課金して利用開始
-  - 以降はClaude Code推しに
-  - Codex CLI、Gemini CLI、Antigravityなども多少触ったがハマらず
 
 ### 今日の話
 
