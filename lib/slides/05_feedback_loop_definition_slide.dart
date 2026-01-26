@@ -84,9 +84,9 @@ class FeedbackLoopDefinitionSlide extends FlutterDeckSlideWidget {
       padding: const EdgeInsets.only(left: 8),
       child: Row(
         children: [
-          Icon(icon, size: 28, color: color),
+          Icon(icon, size: 36, color: color),
           const SizedBox(width: 16),
-          Text(text, style: theme.textTheme.bodyLarge.copyWith(color: color)),
+          Text(text, style: theme.textTheme.subtitle.copyWith(color: color)),
         ],
       ),
     );
@@ -106,16 +106,16 @@ class FeedbackLoopDefinitionSlide extends FlutterDeckSlideWidget {
       padding: const EdgeInsets.only(left: 8),
       child: Row(
         children: [
-          Icon(icon, size: 28, color: grayColor),
+          Icon(icon, size: 36, color: grayColor),
           const SizedBox(width: 16),
           Text(
             text,
-            style: theme.textTheme.bodyLarge.copyWith(color: grayColor),
+            style: theme.textTheme.subtitle.copyWith(color: grayColor),
           ),
           const SizedBox(width: 12),
           Text(
             suffix,
-            style: theme.textTheme.bodyLarge.copyWith(
+            style: theme.textTheme.subtitle.copyWith(
               color: blueColor,
               fontWeight: FontWeight.bold,
             ),
