@@ -123,6 +123,30 @@ FlutterDeckSlideStepsBuilder(
 
 `lib/config/theme_config.dart`でカラースキーム変更可能。
 
+## 文字サイズガイドライン
+
+カンファレンス発表用の推奨文字サイズ（`theme_config.dart`で定義）：
+
+| 用途 | 推奨サイズ |
+|------|-----------|
+| Title/headers | 36-80pt |
+| Body text | 24-32pt |
+| **Minimum readable** | **20pt** |
+
+**定義済みテキストスタイル:**
+
+| スタイル | サイズ | 用途 |
+|----------|--------|------|
+| `display` | 103pt | 大見出し |
+| `header` | 57pt | ヘッダー |
+| `title` | 54pt | タイトル |
+| `subtitle` | 42pt | サブタイトル |
+| `bodyLarge` | 32pt | 本文（大） |
+| `bodyMedium` | 26pt | 本文（中） |
+| `bodySmall` | 22pt | 本文（小）・リンク等 |
+
+> **注意**: 20pt未満の文字は会場後方から読めないため使用禁止。
+
 ## キーボードショートカット
 
 - `→` / `←`: 次/前のスライド
