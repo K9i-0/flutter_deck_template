@@ -34,6 +34,34 @@ flutter_deckを使用した登壇スライドテンプレート。Claude Codeと
 - ナビゲーションボタン（`< >`）は `kDebugMode` の時のみ表示される
 - タイマー左上に表示されるナビゲーションを使用してスライド移動
 
+### 特定スライドへの直接ジャンプ
+
+確認したいスライドに `initial: true` を設定すると、そのスライドから起動できる。
+
+```dart
+configuration: const FlutterDeckSlideConfiguration(
+  route: '/my-slide',
+  title: 'My Slide',
+  initial: true,  // ← これを追加
+),
+```
+
+**dart-mcp でホットリスタート:**
+1. DTD URIを取得
+   ```bash
+   ps aux | grep "dtd-uri" | grep -o 'ws://[^[:space:]]*' | head -1
+   ```
+   または VS Code コマンドパレット → `Dart: Copy DTD URI to Clipboard`
+
+2. dart-mcpで接続・リスタート
+   ```
+   mcp__dart-mcp__connect_dart_tooling_daemon: <DTD URI>
+   mcp__dart-mcp__hot_restart
+   ```
+
+> **注意**: VM Service URI（marionette用）と DTD URI（dart-mcp用）は別物。
+> 間違ったURIを使うと紛らわしいSDKバージョンエラーが出る。
+
 ### アプリ起動コマンド（marionette接続不可時のみ）
 
 ```bash
