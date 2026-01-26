@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
 
 class AiDrivenDevSlide extends FlutterDeckSlideWidget {
-  const AiDrivenDevSlide()
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/ai-driven-dev',
-            title: 'AI Driven Development',
-          ),
-        );
+  const AiDrivenDevSlide({super.key})
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/ai-driven-dev',
+          title: 'AI Driven Development',
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -27,7 +27,7 @@ class AiDrivenDevSlide extends FlutterDeckSlideWidget {
               ),
               const SizedBox(height: 32),
               Text(
-                'GitHub Copilot / Claude Code / Cursor ...',
+                'Claude Code / Cursor / Codex CLI ...',
                 style: theme.textTheme.title,
                 textAlign: TextAlign.center,
               ),
