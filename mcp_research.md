@@ -14,10 +14,13 @@
 |------|-------------|------------|----------------|
 | **開発元** | Mobile Dev, Inc. | Mobile Next | LeanCode |
 | **最新バージョン** | CLI 2.1.0 | 0.0.41 | 0.3.0 |
-| **実装言語** | Kotlin | TypeScript + Go | Dart |
+| **実装言語** | Kotlin + Swift | TypeScript + Go | Dart |
+| **ライセンス** | Apache 2.0 | MIT | MIT |
 | **対応プラットフォーム** | iOS/Android/Web | iOS/Android | macOS/Linux/Windows |
-| **仕組み（iOS）** | XCUITest | mobilecli → go-ios + WDA | - |
-| **仕組み（Android）** | UIAutomator | mobilecli → ADB | - |
+| **iOS通信** | HTTP (独自XCUITestランナー) | HTTP (WDA/Appium製) | - |
+| **Android通信** | **gRPC** (常駐サービス) | **ADB** (コマンド直接) | - |
+| **iOSポート** | 22087 | 8100 | - |
+| **Androidポート** | 7001 | - (ADB経由) | - |
 | **Flutterアプリ対応** | 不要（Semantics推奨） | 不要 | marionette_flutter統合必須 |
 | **デスクトップ対応** | ✗ | ✗ | ✓（デスクトップ専用） |
 | **リリースモード** | ✓ | ✓ | ✗（デバッグ/profileのみ） |
@@ -89,6 +92,70 @@ Maestroは**独自のXCUITestランナー**（Swift製）を使用する。
 `xcrun simctl`コマンドを使用（SimctlIOSDevice）
 
 > 参考: [Maestro iOS Driver Architecture](https://deepwiki.com/mobile-dev-inc/Maestro/4.1-ios-driver-architecture)
+
+### 内部実装の詳細（Android）
+
+AndroidはiOSと異なり、**gRPC**で通信する（Mobile MCPはADB直接実行）。
+
+```
+┌───────────────────┐
+│  Maestro CLI      │  ← Kotlin製
+│  (ホストPC)       │
+└────────┬──────────┘
+         │ gRPC (ポート7001、ADBポートフォワード経由)
+         ▼
+┌───────────────────┐
+│ MaestroDriverService │  ← Kotlin製、Instrumentation Test
+│  (gRPCサーバー)      │     Androidデバイス上で動作
+└────────┬──────────┘
+         │ UIAutomation API呼び出し
+         ▼
+┌───────────────────┐
+│  UIAutomator      │  ← Android公式フレームワーク
+└───────────────────┘
+```
+
+**gRPCサービス定義 (maestro.proto):**
+```protobuf
+service MaestroDriver {
+  rpc deviceInfo(DeviceInfoRequest) returns (DeviceInfo);
+  rpc viewHierarchy(ViewHierarchyRequest) returns (ViewHierarchyResponse);
+  rpc screenshot(ScreenshotRequest) returns (ScreenshotResponse);
+  rpc tap(TapRequest) returns (TapResponse);
+  rpc inputText(InputTextRequest) returns (InputTextResponse);
+  rpc launchApp(LaunchAppRequest) returns (LaunchAppResponse);
+  rpc setLocation(SetLocationRequest) returns (SetLocationResponse);
+  // ...
+}
+```
+
+**Mobile MCPとの違い:**
+| 項目 | Maestro | Mobile MCP |
+|------|---------|------------|
+| **通信方式** | gRPC | ADBコマンド直接実行 |
+| **デバイス側** | gRPCサーバー常駐 | 不要 |
+| **セットアップ** | Instrumentationテストをインストール | 不要 |
+| **パフォーマンス** | 接続維持で高速 | 毎回ADB起動 |
+
+### プロジェクト構造
+
+```
+Maestro/ (Apache 2.0 License)
+├── maestro-cli/                 # CLI & MCPサーバー (Kotlin)
+├── maestro-client/              # Driverインターフェース抽象化
+├── maestro-android/             # Android gRPCサービス
+├── maestro-ios-driver/          # iOS HTTPクライアント (Kotlin)
+├── maestro-ios-xctest-runner/   # iOS XCUITestランナー (Swift)
+├── maestro-orchestra/           # YAMLフロー実行エンジン
+├── maestro-proto/               # Protocol Buffers定義
+├── maestro-web/                 # Webドライバー (Chrome DevTools)
+└── maestro-ai/                  # AI統合コンポーネント
+```
+
+**コード規模:**
+- 総行数: ~50,400行
+- Kotlin: ~400+ファイル
+- Swift: 58ファイル
 
 ### セットアップ
 
