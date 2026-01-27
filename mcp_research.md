@@ -113,6 +113,7 @@ Semantics(
 ### 概要
 - モバイルUI操作に特化したMCP
 - iOS/Android両対応
+- **mobilecli**をバックエンドとして使用
 
 ### 開発元
 - **Mobile Next**
@@ -121,14 +122,65 @@ Semantics(
 ### 仕組み
 
 ```
-AIエージェント → Mobile MCP → WebDriverAgent/UIAutomator → アプリ
+┌─────────────────────────────────────────────────┐
+│  AI Agent / LLM (Claude Code など)              │
+└─────────────────┬───────────────────────────────┘
+                  │ MCP Protocol
+                  ▼
+┌─────────────────────────────────────────────────┐
+│  Mobile MCP (@mobilenext/mobile-mcp)            │
+│  - MCPサーバー                                   │
+│  - ツール定義 (mobile_tap, mobile_screenshot等) │
+└─────────────────┬───────────────────────────────┘
+                  │ JSON-RPC / CLI呼び出し
+                  ▼
+┌─────────────────────────────────────────────────┐
+│  mobilecli                                      │
+│  - 実際のデバイス操作を実行                      │
+│  - iOS: Xcode tools / WDA 経由                  │
+│  - Android: ADB 経由                            │
+└─────────────────────────────────────────────────┘
 ```
 
-- **iOS**: WebDriverAgent経由
-- **Android**: UIAutomator経由
+- **Mobile MCP** = AI/LLM向けのMCPインターフェース層
+- **mobilecli** = 実際のデバイス操作を行うバックエンド
 - 2段階アプローチ：
   1. アクセシビリティツリー優先
   2. スクリーンショット分析フォールバック
+
+### mobilecli について
+
+**リポジトリ**: [mobile-next/mobilecli](https://github.com/mobile-next/mobilecli)
+
+iOS/Android デバイス、シミュレーター、エミュレーターを**統一的に操作するCLIツール**。
+
+**主な機能:**
+- デバイス列挙・管理
+- シミュレーター/エミュレーターの起動・停止
+- スクリーンショット撮影（PNG/JPEG）
+- MJPEGビデオストリーミング
+- タップ、ボタン押下、テキスト入力
+- アプリの起動・終了
+
+**技術スタック:**
+- **Go** (89.9%) - コア実装
+- **TypeScript** (9.5%) - npm配布用
+- WebSocket + JSON-RPC 2.0 サポート
+- HTTP RPC エンドポイント
+
+### アップデート履歴
+
+| バージョン | 日付 | 主な変更 |
+|-----------|------|----------|
+| 0.0.41 | 2025/1/27 | mobilecli 0.0.52、Android `resource-id`/`checkable` 属性対応 |
+| 0.0.40 | 2025/1/15 | MCP SDK脆弱性修正 |
+| 0.0.39 | 2025/1/15 | iOS/Android long-press のカスタム duration 対応 |
+| 0.0.38 | 2024/12/9 | iOS Simulator を mobilecli 経由に移行、WDA自動ダウンロード |
+
+**mobilecli 0.0.52 の新機能:**
+- WebSocket対応のJSON-RPC（単一接続で複数リクエスト処理）
+- iOS実機でのAVCスクリーンキャプチャ
+- UIダンプでラベルなしボタンも含むよう拡張
 
 ### セットアップ
 
@@ -168,12 +220,14 @@ AIエージェント → Mobile MCP → WebDriverAgent/UIAutomator → アプリ
 - アクセシビリティツリー + スクリーンショットフォールバック
 - 要素の座標情報（x, y, width, height）を取得
 - LLMが理解しやすいJSON形式
+- **v0.0.41以降**: Android で `resource-id` や `checkable` 属性を持つ要素も取得可能
 
 ### 画面操作の特徴
 
 - 座標指定でタップ（柔軟性高い）
 - 単一操作が高速
 - スワイプ等の細かい制御が可能
+- **v0.0.39以降**: long-press のカスタム duration 対応
 
 ---
 
@@ -310,10 +364,10 @@ void main() {
 
 ## 仕組みの違い（図解用）
 
-### Maestro MCP / Mobile MCP
+### Maestro MCP
 ```
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│ AIエージェント │ → │ MCP Server  │ → │ OS標準API   │
+│ AIエージェント │ → │ MCP Server  │ → │ Maestro CLI │
 └─────────────┘    └─────────────┘    └─────────────┘
                                             ↓
                    XCUITest (iOS) / UIAutomator (Android)
@@ -322,6 +376,21 @@ void main() {
                                       │ アプリ     │
                                       │（外部操作）│
                                       └───────────┘
+```
+
+### Mobile MCP
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│ AIエージェント │ → │ Mobile MCP  │ → │ mobilecli   │
+└─────────────┘    │ (MCPサーバー) │    │ (Go製CLI)   │
+                   └─────────────┘    └─────────────┘
+                                            ↓
+                        ┌───────────────────┼───────────────────┐
+                        ↓                                       ↓
+                  ┌───────────┐                           ┌───────────┐
+                  │ iOS       │                           │ Android   │
+                  │ WDA経由   │                           │ ADB経由   │
+                  └───────────┘                           └───────────┘
 ```
 
 ### Marionette MCP
@@ -345,5 +414,6 @@ void main() {
 - Maestro GitHub: https://github.com/mobile-dev-inc/maestro
 - Mobile MCP: https://github.com/mobile-next/mobile-mcp
 - Mobile MCP npm: https://www.npmjs.com/package/@mobilenext/mobile-mcp
+- mobilecli GitHub: https://github.com/mobile-next/mobilecli
 - Marionette MCP: https://pub.dev/packages/marionette_mcp
 - Marionette公式サイト: https://marionette.leancode.co/
