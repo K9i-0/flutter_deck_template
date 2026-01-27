@@ -27,6 +27,96 @@
 
 ---
 
+## MCPツール定義のトークン数
+
+MCPツールの定義はプロンプトに含まれるため、**トークン数がコンテキストを圧迫**する。
+
+**Claude Codeの標準コンテキストウィンドウ: 200,000 tokens**
+
+### UI検証MCP比較
+
+| MCP | ツール数 | 総トークン | 平均/ツール | コンテキスト占有率 |
+|-----|---------|-----------|------------|------------------|
+| **Marionette** | 9 | **1,290** | 143 | **0.65%** |
+| **Maestro** | 14 | 2,325 | 166 | 1.16% |
+| **Mobile MCP** | 19 | 3,143 | 165 | 1.57% |
+
+### 効率比較
+
+```
+Marionette vs Mobile MCP: 2.43x 軽量
+Marionette vs Maestro:    1.80x 軽量
+```
+
+### 各MCPのツール詳細（トークン数降順）
+
+**Marionette (9ツール / 1,290 tokens)**
+```
+368  tap
+169  scroll_to
+156  connect
+146  enter_text
+108  get_interactive_elements
+ 99  hot_reload
+ 90  get_logs
+ 87  take_screenshots
+ 67  disconnect
+```
+
+**Maestro (14ツール / 2,325 tokens)**
+```
+527  run_flow          ← YAMLフロー実行（複雑なスキーマ）
+387  tap_on
+244  run_flow_files
+175  start_device
+150  inspect_view_hierarchy
+111  launch_app, stop_app
+107  query_docs
+106  input_text
+104  check_flow_syntax
+ 85  take_screenshot
+ 81  back
+ 79  cheat_sheet
+ 58  list_devices
+```
+
+**Mobile MCP (19ツール / 3,143 tokens)**
+```
+269  swipe_on_screen
+253  long_press_on_screen_at_coordinates
+211  press_button
+204  click_on_screen_at_coordinates
+181  double_tap_on_screen
+177  type_keys, install_app
+170  launch_app
+161  uninstall_app
+153  take_screenshot
+146  save_screenshot, set_orientation
+145  terminate_app
+138  open_url
+133  list_elements_on_screen
+124  list_available_devices
+121  get_screen_size
+117  list_apps, get_orientation
+```
+
+### 参考: 他のMCP
+
+| MCP | ツール数 | 総トークン | コンテキスト占有率 |
+|-----|---------|-----------|------------------|
+| dart-mcp | 24 | 6,832 | 3.42% |
+| claude-in-chrome | 17 | 5,598 | 2.80% |
+
+### インサイト
+
+- **Marionetteが最も効率的**: 最小限のツール数（9個）で必要十分な機能を提供
+- **Maestroのrun_flowが重い**: YAMLフロー定義のスキーマが複雑（527 tokens）
+- **Mobile MCPはツール数が多い**: 細かい操作を個別ツール化（19個）
+
+**AI呼び出しコストを考慮するならMarionetteが有利**
+
+---
+
 ## Maestro MCP
 
 ### 概要
