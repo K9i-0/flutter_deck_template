@@ -562,6 +562,221 @@ AIエージェント → Marionette MCP → VM Service Protocol → Flutterア�
 - ウィジェットツリーを直接操作
 - **デスクトップアプリ専用**（MCPサーバーがデスクトッププラットフォームのみ対応）
 
+### 内部実装の詳細
+
+#### アーキテクチャ
+
+```
+┌─────────────────┐
+│  MCP Client     │  (Claude Code, Cursor等)
+└────────┬────────┘
+         │ MCP Protocol (stdio or SSE)
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│  marionette_mcp (Dart製MCPサーバー)                         │
+│  ├── bin/marionette_mcp.dart     # CLIエントリーポイント    │
+│  └── lib/src/                                               │
+│      ├── vm_service_context.dart  # MCPツール登録 (447行)   │
+│      └── vm_service_connector.dart # VM通信 (318行)         │
+└────────┬────────────────────────────────────────────────────┘
+         │ VM Service Protocol (WebSocket)
+         │ ws://127.0.0.1:<PORT>/ws
+         ▼
+┌─────────────────────────────────────────────────────────────┐
+│  marionette_flutter (Flutterアプリ内)                       │
+│  └── lib/src/                                               │
+│      ├── binding/                                           │
+│      │   └── marionette_binding.dart  # カスタム拡張登録    │
+│      └── services/                                          │
+│          ├── gesture_dispatcher.dart  # タップ/ドラッグ     │
+│          ├── text_input_simulator.dart # テキスト入力       │
+│          ├── scroll_simulator.dart    # スクロール          │
+│          ├── screenshot_service.dart  # スクリーンショット  │
+│          └── element_tree_finder.dart # 要素検索            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**コード規模:**
+- marionette_mcp: ~765行
+- marionette_flutter: ~974行
+- 合計: ~1,739行（非常に軽量）
+
+#### VM Service Protocol とは？
+
+Dart/Flutterの**デバッグ用プロトコル**。IDEのデバッガ等が使用する。
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  通常の使われ方                                             │
+│                                                             │
+│  VS Code/Android Studio  ←→  VM Service  ←→  Flutterアプリ │
+│  (デバッガ、Hot Reload)        (WebSocket)                  │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│  Marionetteの使い方                                         │
+│                                                             │
+│  AIエージェント  ←→  marionette_mcp  ←→  Flutterアプリ      │
+│  (UI自動操作)         (WebSocket)       (カスタム拡張)      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**できること:**
+- アプリ内のDartコードを呼び出す
+- カスタム拡張（Service Extension）を登録・呼び出し
+- ホットリロードをトリガー
+- ログを取得
+
+**制限:**
+- **デバッグ/profileモードのみ**（リリースビルドでは無効）
+- WebSocketで接続が必要
+
+#### カスタム拡張の登録（marionette_flutter側）
+
+`MarionetteBinding`がFlutterの`WidgetsFlutterBinding`を拡張して、VM Service拡張を登録:
+
+```dart
+// marionette_binding.dart
+class MarionetteBinding extends WidgetsFlutterBinding {
+  @override
+  void initInstances() {
+    super.initInstances();
+
+    // 拡張を登録
+    registerServiceExtension(
+      name: 'marionette.tap',  // → ext.flutter.marionette.tap
+      callback: (params) async {
+        final matcher = _buildMatcher(params);
+        await _gestureDispatcher.tap(matcher);
+        return {'status': 'Success'};
+      },
+    );
+
+    registerServiceExtension(name: 'marionette.interactiveElements', ...);
+    registerServiceExtension(name: 'marionette.enterText', ...);
+    registerServiceExtension(name: 'marionette.scrollTo', ...);
+    registerServiceExtension(name: 'marionette.getLogs', ...);
+    registerServiceExtension(name: 'marionette.takeScreenshots', ...);
+  }
+}
+```
+
+#### 拡張の呼び出し（marionette_mcp側）
+
+```dart
+// vm_service_connector.dart
+Future<void> tap(Map<String, dynamic> matcher) async {
+  await _service.callServiceExtension(
+    'ext.flutter.marionette.tap',  // フル名前空間
+    isolateId: _isolateId,
+    args: matcher,
+  );
+}
+```
+
+#### UI操作の実装
+
+**タップ操作 (gesture_dispatcher.dart):**
+```dart
+Future<void> tap(WidgetMatcher matcher) async {
+  // 1. 要素を検索（座標指定以外）
+  final element = await _finder.findElement(matcher);
+
+  // 2. RenderBoxから中心座標を取得
+  final renderBox = element.renderObject as RenderBox;
+  final center = renderBox.localToGlobal(renderBox.size.center(Offset.zero));
+
+  // 3. PointerEventを生成して送信
+  GestureBinding.instance.handlePointerEvent(PointerAddedEvent(...));
+  GestureBinding.instance.handlePointerEvent(PointerDownEvent(position: center));
+  await Future.delayed(Duration(milliseconds: 10));
+  GestureBinding.instance.handlePointerEvent(PointerUpEvent(position: center));
+
+  // 4. フレームをスケジュール（UIを更新）
+  WidgetsBinding.instance.scheduleFrame();
+}
+```
+
+**テキスト入力 (text_input_simulator.dart):**
+```dart
+Future<void> enterText(WidgetMatcher matcher, String text) async {
+  // 1. TextField/TextFormFieldを検索
+  final element = await _finder.findElement(matcher);
+
+  // 2. EditableTextを見つける
+  final editableText = _findEditableText(element);
+
+  // 3. TextEditingControllerを直接更新
+  editableText.controller
+    ..text = text
+    ..selection = TextSelection.collapsed(offset: text.length);
+
+  WidgetsBinding.instance.scheduleFrame();
+}
+```
+
+**ポイント**: ジェスチャーをシミュレートするのではなく、**Controllerを直接操作**するため確実。
+
+#### 要素マッチング戦略
+
+| マッチャー | 優先度 | 説明 |
+|-----------|--------|------|
+| `CoordinatesMatcher` | 1 (最高) | 座標指定。ツリー検索をスキップ |
+| `KeyMatcher` | 2 | `ValueKey<String>`で検索 |
+| `TextMatcher` | 3 | 表示テキストで検索 |
+| `TypeStringMatcher` | 4 (最低) | ウィジェット型名で検索 |
+
+**HitTest検証:**
+```dart
+// 要素が実際にタップ可能か検証
+bool _isHittable(Element element) {
+  final result = HitTestResult();
+  WidgetsBinding.instance.hitTestInView(result, center, viewId);
+
+  // ヒットパスにこの要素があるか確認
+  return result.path.any((entry) => entry.target == renderObject);
+}
+```
+
+#### Maestro/Mobile MCPとの根本的な違い
+
+| 項目 | Marionette | Maestro/Mobile MCP |
+|------|------------|-------------------|
+| **アプローチ** | **内部から**操作 | **外部から**操作 |
+| **アクセス対象** | Flutterウィジェットツリー | OS標準API (XCUITest/ADB) |
+| **通信プロトコル** | VM Service (Dart専用) | HTTP/gRPC/ADB |
+| **アプリ改修** | **必要** (MarionetteBinding) | 不要 |
+| **リリースビルド** | ✗ 不可 | ✓ 可能 |
+| **プラットフォーム** | デスクトップのみ | iOS/Android |
+
+```
+【外部からのアプローチ】Maestro/Mobile MCP
+┌─────────────┐
+│   ツール    │
+└──────┬──────┘
+       │ OS標準API経由
+       ▼
+┌─────────────┐     ┌─────────────┐
+│  OS (iOS/   │ ──→ │  アプリ     │
+│   Android)  │     │ (ブラック   │
+└─────────────┘     │  ボックス)  │
+                    └─────────────┘
+
+【内部からのアプローチ】Marionette
+┌─────────────┐
+│   ツール    │
+└──────┬──────┘
+       │ VM Service Protocol
+       ▼
+┌─────────────────────────────────┐
+│  Flutterアプリ                  │
+│  ┌─────────────────────────┐   │
+│  │ MarionetteBinding       │   │
+│  │  └→ WidgetTree直接操作  │   │
+│  └─────────────────────────┘   │
+└─────────────────────────────────┘
+```
+
 ### セットアップ
 
 ```bash
