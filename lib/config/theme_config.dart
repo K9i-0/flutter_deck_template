@@ -16,6 +16,12 @@ class ThemeConfig {
   /// Light accent blue (for gradients)
   static const Color accentBlueLight = Color(0xFF5AC8FA);
 
+  /// Accent color (orange) for Maestro
+  static const Color accentOrange = Color(0xFFFF9500);
+
+  /// Accent color (green) for Mobile MCP
+  static const Color accentGreen = Color(0xFF34C759);
+
   /// Background gradient start
   static const Color background = Color(0xFF0A0A0A);
 
@@ -24,6 +30,9 @@ class ThemeConfig {
 
   /// Container background
   static const Color surfaceContainer = Color(0xFF1E1E1E);
+
+  /// Secondary surface background
+  static const Color surfaceSecondary = Color(0xFF252525);
 
   /// Border / Divider
   static const Color outline = Color(0xFF2A2A2A);
