@@ -13,13 +13,13 @@
 | 項目 | Maestro MCP | Mobile MCP | Marionette MCP |
 |------|-------------|------------|----------------|
 | **開発元** | Mobile Dev, Inc. | Mobile Next | LeanCode |
-| **最新バージョン** | CLI 2.1.0 | npm最新 | 0.3.0 |
-| **対応プラットフォーム** | iOS/Android/Web | iOS/Android | iOS/Android/macOS/Linux/Windows |
-| **仕組み（iOS）** | XCUITest | WebDriverAgent | Flutter VM Service |
-| **仕組み（Android）** | UIAutomator | UIAutomator | Flutter VM Service |
+| **最新バージョン** | CLI 2.1.0 | 0.0.41 | 0.3.0 |
+| **対応プラットフォーム** | iOS/Android/Web | iOS/Android | macOS/Linux/Windows |
+| **仕組み（iOS）** | XCUITest | WebDriverAgent | - |
+| **仕組み（Android）** | UIAutomator | UIAutomator | - |
 | **Flutterアプリ対応** | 不要（Semantics推奨） | 不要 | marionette_flutter統合必須 |
-| **デスクトップ対応** | ✗ | ✗ | ✓ |
-| **リリースモード** | ✓ | ✓ | ✗（デバッグのみ） |
+| **デスクトップ対応** | ✗ | ✗ | ✓（デスクトップ専用） |
+| **リリースモード** | ✓ | ✓ | ✗（デバッグ/profileのみ） |
 
 ---
 
@@ -28,6 +28,8 @@
 ### 概要
 - E2Eテストツール「Maestro」のMCP
 - CLIをラップした形式で、MCPツールとしても使える
+
+> **注意**: 以前は独立した[maestro-mcp](https://github.com/mobile-dev-inc/maestro-mcp)リポジトリが存在したが、現在は**Archived**。MCP機能はMaestro CLIに統合されている。
 
 ### 開発元
 - **Mobile Dev, Inc.**
@@ -65,7 +67,7 @@ curl -Ls "https://get.maestro.mobile.dev" | bash
 
 **特別な対応は不要**（ブラックボックステスト）
 
-ただし、Semanticsを設定するとMaestroの検出精度が向上：
+ただし、Semanticsを設定するとMaestroの検出精度が向上（Flutter 3.19以降で`identifier`プロパティ利用可能）：
 
 ```dart
 Semantics(
@@ -134,14 +136,14 @@ AIエージェント → Mobile MCP → WebDriverAgent/UIAutomator → アプリ
 # 環境要件
 # - Xcode コマンドラインツール（iOS用）
 # - Android Platform Tools（Android用）
-# - Node.js v22以上
+# - Node.js v22以上（必須）
 
 # MCP設定（.mcp.json）
 {
   "mobile-mcp": {
     "type": "stdio",
     "command": "npx",
-    "args": ["-y", "@mobilenext/mobile-mcp@latest"]
+    "args": ["-y", "@mobilenext/mobile-mcp@0.0.41"]
   }
 }
 ```
@@ -159,7 +161,7 @@ AIエージェント → Mobile MCP → WebDriverAgent/UIAutomator → アプリ
 | `mobile_click_on_screen_at_coordinates` | 座標指定タップ |
 | `mobile_type_keys` | テキスト入力 |
 | `mobile_take_screenshot` | スクリーンショット |
-| `mobile_swipe` | スワイプ操作 |
+| `mobile_swipe_on_screen` | スワイプ操作 |
 
 ### 画面要素取得の特徴
 
@@ -180,10 +182,12 @@ AIエージェント → Mobile MCP → WebDriverAgent/UIAutomator → アプリ
 ### 概要
 - **Flutter特化**のMCP
 - Flutter独自の仕組み（VM Service Protocol）で動作
+- **デスクトップ専用**（macOS/Linux/Windows）
 
 ### 開発元
 - **LeanCode**（Patrol UIテストフレームワークの開発元）
 - https://pub.dev/packages/marionette_mcp
+- https://marionette.leancode.co/
 
 ### 仕組み
 
@@ -193,7 +197,7 @@ AIエージェント → Marionette MCP → VM Service Protocol → Flutterア�
 
 - Flutter VM Service Protocolを使用
 - ウィジェットツリーを直接操作
-- **デスクトップアプリにも対応**
+- **デスクトップアプリ専用**（MCPサーバーがデスクトッププラットフォームのみ対応）
 
 ### セットアップ
 
@@ -245,6 +249,7 @@ void main() {
 | `enter_text` | テキスト入力 |
 | `scroll_to` | スクロール |
 | `take_screenshots` | スクリーンショット |
+| `get_logs` | アプリログ取得 |
 | `hot_reload` | ホットリロード |
 
 ### 画面要素取得の特徴
@@ -261,7 +266,8 @@ void main() {
 
 ### 制限事項
 
-- **デバッグモードのみ対応**（リリースビルド非対応）
+- **デバッグ/profileモードのみ対応**（リリースビルド非対応）
+- **デスクトッププラットフォーム専用**（iOS/Androidは非対応）
 - VM Service URIの取得が必要（やや不安定な場合あり）
 
 ---
@@ -295,9 +301,10 @@ void main() {
 |-------------|---------|------|
 | iOS/Android実機E2E | Maestro MCP | resource-idで安定、YAML再利用 |
 | 単発の高速操作 | Mobile MCP | 単一操作が高速 |
-| デスクトップアプリ | Marionette MCP | 唯一の対応 |
+| Flutterデスクトップアプリ | Marionette MCP | デスクトップ専用・Flutter特化 |
 | ホットリロード連携 | Marionette MCP | コード変更→即確認 |
-| リリースビルド検証 | Maestro/Mobile | Marionetteはデバッグのみ |
+| リリースビルド検証 | Maestro/Mobile | Marionetteはデバッグ/profileのみ |
+| iOS/Androidモバイル | Maestro/Mobile | Marionetteはデスクトップ専用 |
 
 ---
 
@@ -335,5 +342,8 @@ void main() {
 ## 参考リンク
 
 - Maestro: https://docs.maestro.dev/getting-started/maestro-mcp
+- Maestro GitHub: https://github.com/mobile-dev-inc/maestro
 - Mobile MCP: https://github.com/mobile-next/mobile-mcp
+- Mobile MCP npm: https://www.npmjs.com/package/@mobilenext/mobile-mcp
 - Marionette MCP: https://pub.dev/packages/marionette_mcp
+- Marionette公式サイト: https://marionette.leancode.co/
