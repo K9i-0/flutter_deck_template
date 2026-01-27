@@ -14,9 +14,10 @@
 |------|-------------|------------|----------------|
 | **開発元** | Mobile Dev, Inc. | Mobile Next | LeanCode |
 | **最新バージョン** | CLI 2.1.0 | 0.0.41 | 0.3.0 |
+| **実装言語** | Kotlin | TypeScript + Go | Dart |
 | **対応プラットフォーム** | iOS/Android/Web | iOS/Android | macOS/Linux/Windows |
-| **仕組み（iOS）** | XCUITest | WebDriverAgent | - |
-| **仕組み（Android）** | UIAutomator | UIAutomator | - |
+| **仕組み（iOS）** | XCUITest | mobilecli → go-ios + WDA | - |
+| **仕組み（Android）** | UIAutomator | mobilecli → ADB | - |
 | **Flutterアプリ対応** | 不要（Semantics推奨） | 不要 | marionette_flutter統合必須 |
 | **デスクトップ対応** | ✗ | ✗ | ✓（デスクトップ専用） |
 | **リリースモード** | ✓ | ✓ | ✗（デバッグ/profileのみ） |
@@ -228,6 +229,146 @@ iOS/Android デバイス、シミュレーター、エミュレーターを**統
 - 単一操作が高速
 - スワイプ等の細かい制御が可能
 - **v0.0.39以降**: long-press のカスタム duration 対応
+
+### 内部実装の詳細
+
+#### アーキテクチャ
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│  Mobile MCP (TypeScript / Node.js)                             │
+│  src/server.ts - MCPツール定義 (20+ツール)                      │
+│  src/mobilecli.ts - mobilecliバイナリのラッパー                 │
+│  src/robot.ts - デバイス抽象化インターフェース                   │
+└───────────────────────────┬────────────────────────────────────┘
+                            │ CLI呼び出し / JSON出力パース
+                            ▼
+┌────────────────────────────────────────────────────────────────┐
+│  mobilecli (Go / ~9,300行)                                     │
+│  ├── cli/          - CLIコマンド定義                           │
+│  ├── commands/     - コマンド実装                              │
+│  ├── devices/      - デバイス抽象化 & プロトコル実装            │
+│  │   ├── ios.go        - iOS実機                              │
+│  │   ├── simulator.go  - iOSシミュレータ                       │
+│  │   ├── android.go    - Android                              │
+│  │   └── wda/          - WebDriverAgentクライアント            │
+│  └── server/       - JSON-RPC / WebSocketサーバー              │
+└───────────────────────────┬────────────────────────────────────┘
+                            │
+        ┌───────────────────┴───────────────────┐
+        ▼                                       ▼
+┌───────────────────┐                   ┌───────────────────┐
+│      iOS          │                   │     Android       │
+│  go-ios + WDA     │                   │       ADB         │
+└───────────────────┘                   └───────────────────┘
+```
+
+#### iOS通信プロトコル
+
+| プロトコル | 用途 | 実装 |
+|-----------|------|------|
+| **iTunes/Xcode USB** | デバイス検出・ペアリング | go-iosライブラリ |
+| **USB Multiplexer** | ポートフォワーディング | go-iosライブラリ |
+| **WebDriverAgent (WDA)** | UI操作（タップ、スワイプ等） | HTTP REST API |
+| **W3C WebDriver Actions** | 複雑なジェスチャー | WDA `/session/{id}/actions` |
+| **Tunnel Protocol (iOS 17+)** | セキュア接続 | go-ios tunnel |
+| **MJPEG** | ビデオストリーミング | HTTPチャンク読み取り |
+
+**WDAプロトコルフロー:**
+```
+1. セッション作成: POST /session
+   → sessionId取得
+
+2. タップ: POST /session/{sessionId}/actions
+   {
+     "actions": [{
+       "type": "pointer",
+       "id": "finger1",
+       "parameters": { "pointerType": "touch" },
+       "actions": [
+         {"type": "pointerMove", "x": 100, "y": 200},
+         {"type": "pointerDown", "button": 0},
+         {"type": "pause", "duration": 100},
+         {"type": "pointerUp", "button": 0}
+       ]
+     }]
+   }
+
+3. スクリーンショット: GET /screenshot
+   → base64エンコードPNG
+
+4. UI要素取得: GET /source
+   → XMLアクセシビリティツリー
+```
+
+**iOS 17+の注意点:**
+- トンネル接続が必須（直接USB接続不可）
+- ペアリングレコードが `/tmp/mobilecli-pairrecords` に保存
+- 5秒ごとにトンネル状態を更新
+
+#### Android通信プロトコル
+
+| プロトコル | 用途 | 実装 |
+|-----------|------|------|
+| **ADB (Android Debug Bridge)** | 全デバイス操作 | `exec.Command("adb", ...)` |
+| **shell input** | タップ・スワイプ・テキスト入力 | `adb shell input` |
+| **screencap** | スクリーンショット | `adb exec-out screencap -p` |
+| **dumpsys** | ディスプレイ情報・システム情報 | `adb shell dumpsys` |
+| **pm (Package Manager)** | アプリ一覧・インストール | `adb shell pm` |
+| **am (Activity Manager)** | アプリ起動・停止 | `adb shell am` |
+
+**ADBコマンド対応表:**
+
+| 操作 | ADBコマンド |
+|------|------------|
+| タップ | `adb shell input tap <x> <y>` |
+| 長押し | `adb shell input swipe <x> <y> <x> <y> <duration>` |
+| スワイプ | `adb shell input swipe <x1> <y1> <x2> <y2> 1000` |
+| テキスト入力 | `adb shell input text "message"` |
+| ボタン押下 | `adb shell input keyevent <keycode>` |
+| スクリーンショット | `adb exec-out screencap -p -d <displayID>` |
+| アプリ起動 | `adb shell monkey -p <bundleID> -c android.intent.category.LAUNCHER 1` |
+| アプリ停止 | `adb shell am force-stop <bundleID>` |
+| UI要素取得 | `adb shell uiautomator dump` → XMLパース |
+
+#### デバイス抽象化インターフェース
+
+mobilecliは `ControllableDevice` インターフェースで全デバイスを統一的に扱う:
+
+```go
+type ControllableDevice interface {
+    // 識別
+    ID() string           // デバイスID/UDID
+    Platform() string     // "ios" | "android"
+    DeviceType() string   // "real" | "simulator" | "emulator"
+
+    // UI操作
+    Tap(x, y int) error
+    LongPress(x, y, duration int) error
+    Swipe(x1, y1, x2, y2 int) error
+    SendKeys(text string) error
+
+    // スクリーンショット
+    TakeScreenshot() ([]byte, error)
+
+    // アプリ管理
+    LaunchApp(bundleID string) error
+    TerminateApp(bundleID string) error
+    ListApps() ([]InstalledAppInfo, error)
+
+    // UI要素
+    DumpSource() ([]ScreenElement, error)
+}
+```
+
+#### ポート設定
+
+| 用途 | ポート範囲 |
+|------|-----------|
+| iOS WDA (実機) | 8100-8299 |
+| iOS WDA (シミュレータ) | 13001-13200 |
+| iOS MJPEG (シミュレータ) | 13201-13400 |
+| JSON-RPC/WebSocketサーバー | 12000 |
 
 ---
 
