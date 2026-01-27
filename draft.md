@@ -1,6 +1,6 @@
 # タイトル
 
-Flutterアプリ開発でもUI検証のフィードバックループを回そう
+MCPでFlutterアプリのUI検証フィードバックループを回そう
 
 ## 自己紹介
 
@@ -64,57 +64,34 @@ Skillがmcpの使い方を保管する構成もある
 
 ### 具体的なツール紹介
 
-自分が知る限り3つのmcpが有力
+有力な3つを紹介
 
 - maestro mcp
 - mobile mcp
 - marionette mcp
 
-## mcpの比較
+どのツールでもUI検証はできるが、実現方法など違いがあるのでそれを解説
 
-ここから旧
-
-## AI駆動開発するうえで抑えておきたい基礎
-
-- そもそもの目的は生産性を上げること
-  コーディングエージェントを使った開発が当たり前に > どうしたら生産性があがるか
-  並列数をあげる x エージェントの自律性をあげる
-
-- コンテキストウィンドウについて
-- mcp、Skillsについて
-
-## Flutterでの話
-
-- FlutterでのUI操作のFBループの選択肢がいくつかある
-  - mobile mcp、maestro mcp、marionette mcp、cliをSkillsでラップ
-  - タイトルにはmaestro mcpと書いたが、正直どれがベストと言い切れてる状況ではない
-- （小さく）ユニットテスト、lintはあえて説明する必要ないと思うので話さないです
-
-### mobile mcp、maestro mcp、marionette mcp
-
-- 基本的に同じようなことができるツール
-  - 画面要素の把握、スクショ、UI操作（タップなど）
-- 仕組みが割と違う
-
-### mobile mcpについて
-
-- mobileのUI操作mcpとしては先駆者
-
-### maestro mcpについて
+#### maestro mcp
 
 - e2eテストツールとして有名なmaestroのmcp
-- mcpといいつつ現状はmaestro cliをラップしたツール
+- mcp独自の機能は現状なく、はmaestro cliをラップしたツール
 - 最新のmaestro cliをインストールするとついでに使えるようになる
+- iOS/Android対応
+  <https://docs.maestro.dev/getting-started/maestro-mcp>
 
-### marionette mcp
+#### mobile mcp
+
+- mobileのUI操作mcpとしては先駆者
+  <https://github.com/mobile-next/mobile-mcp>
+
+#### marionette mcp
 
 - LeanCodeが開発してFlutter特化のmcp
 - Flutterに閉じた仕組みで動作しており、他とはアプローチが結構違う
 - Fllutterの仕組みベースなので、デスクトップ向け（macOS等）でも動くのが地味にありがたい
 - 使ってみたがvm uriの取得が結構不安定
 - Skillsでカバーすればいい感じかも
+  <https://pub.dev/packages/marionette_mcp>
 
 ## まとめ
-
-- UI操作のFBループは今後間違いなく重要
-- ベストなツールは今後も変わるだろうが、実践投入で知見を共有し合おう

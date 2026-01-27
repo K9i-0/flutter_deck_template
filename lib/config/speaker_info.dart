@@ -19,7 +19,7 @@ class SpeakerInfo {
 
   /// Presentation title.
   static const String presentationTitle =
-      'Flutterアプリ開発でもUI検証のフィードバックループを回そう';
+      'MCPでFlutterアプリのUI検証フィードバックループを回そう';
 
   /// Presentation subtitle.
   static const String presentationSubtitle = '第9回 FlutterGakkai';
