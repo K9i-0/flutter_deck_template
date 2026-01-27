@@ -42,11 +42,53 @@
 AIエージェント → Maestro MCP → Maestro CLI → XCUITest/UIAutomator → アプリ
 ```
 
-- **iOS**: XCUITestベース
+- **iOS**: XCUITestベース（独自XCUITestランナー経由）
 - **Android**: UIAutomatorベース
 - **Web**: Selenium/Playwrightベース
 - アプリ外部からのブラックボックステスト
 - アクセシビリティツリーを解析して要素を特定
+
+### 内部実装の詳細（iOS）
+
+Maestroは**独自のXCUITestランナー**（Swift製）を使用する。
+
+```
+┌───────────────────┐
+│  Maestro CLI      │  ← Kotlin製
+│  (ホストPC)       │
+└────────┬──────────┘
+         │ HTTP REST API (ポート22087)
+         ▼
+┌───────────────────┐
+│  XCUITest Runner  │  ← Swift製、Maestro独自開発
+│  (HTTPサーバー)   │     iOSデバイス上で動作
+└────────┬──────────┘
+         │ 内部で呼び出し
+         ▼
+┌───────────────────┐
+│  XCUITest         │  ← Apple公式フレームワーク
+└───────────────────┘
+```
+
+**動作フロー:**
+1. Maestro CLIがXCUITestランナーをiOSデバイス上で起動
+2. ランナーがHTTPサーバー（ポート22087）として待機
+3. CLIがHTTPリクエストでコマンド送信（タップ、スワイプ等）
+4. ランナーがXCUITest APIを呼び出して実行
+5. 結果をJSONで返却
+
+**主要エンドポイント:**
+- `/viewHierarchy` - UI要素ツリー取得
+- `/tap` - タップ操作
+- `/swipe` - スワイプ操作
+- `/inputText` - テキスト入力
+- `/launchApp` - アプリ起動
+- `/runningApp` - 実行中アプリ情報
+
+**シミュレータ操作:**
+`xcrun simctl`コマンドを使用（SimctlIOSDevice）
+
+> 参考: [Maestro iOS Driver Architecture](https://deepwiki.com/mobile-dev-inc/Maestro/4.1-ios-driver-architecture)
 
 ### セットアップ
 
@@ -262,6 +304,65 @@ iOS/Android デバイス、シミュレーター、エミュレーターを**統
 │  go-ios + WDA     │                   │       ADB         │
 └───────────────────┘                   └───────────────────┘
 ```
+
+#### go-ios + WDA とは何か？
+
+**重要**: どちらも**Apple公式ツールではない**。サードパーティ製。
+
+Appleは**公式のリモートUI操作APIを提供していない**ため、サードパーティがリバースエンジニアリングで実現している。
+
+```
+Android: adb shell input tap 100 200  ← 公式ツールで簡単
+iOS:     go-ios → WDA → XCUITest     ← 複雑な迂回が必要
+```
+
+**go-ios** ([GitHub](https://github.com/danielpaulus/go-ios)):
+- Appleの**非公開プロトコルをリバースエンジニアリング**して実装したGoライブラリ
+- 類似プロジェクト: `libimobiledevice`（C言語実装）
+- できること: デバイス検出、ペアリング、ポートフォワーディング、iOS 17+トンネル接続
+
+```
+┌─────────────┐
+│   go-ios    │  ← サードパーティ製Goライブラリ
+└──────┬──────┘
+       │ リバースエンジニアリングした非公開プロトコル
+       ▼
+┌─────────────────────────────────────┐
+│  Apple非公開プロトコル               │
+│  - usbmuxd (USB多重化デーモン)       │
+│  - lockdownd (デバイスロック管理)    │
+│  - AFC (Apple File Conduit)         │
+└─────────────────────────────────────┘
+```
+
+**WDA (WebDriverAgent)** ([GitHub](https://github.com/appium/WebDriverAgent)):
+- 元Facebook開発、現在はAppiumプロジェクトが維持管理
+- **XCUITest**（Apple公式UIテストフレームワーク）を**HTTP API経由で操作できるようにするプロキシアプリ**
+- iOSデバイス上でHTTPサーバーとして動作
+
+```
+┌───────────────────┐
+│  mobilecli        │
+└────────┬──────────┘
+         │ HTTP REST API (ポート8100)
+         ▼
+┌───────────────────┐
+│  WebDriverAgent   │  ← iOSデバイス上で動作
+│  (HTTPサーバー)   │     元Facebook、現Appium管理
+└────────┬──────────┘
+         │ 内部で呼び出し
+         ▼
+┌───────────────────┐
+│  XCUITest         │  ← Apple公式フレームワーク
+└───────────────────┘
+```
+
+| 項目 | go-ios | WDA | XCUITest |
+|------|--------|-----|----------|
+| **開発元** | 個人開発者 | Facebook→Appium | **Apple** |
+| **Apple公式** | ✗ | ✗ | ✓ |
+| **役割** | デバイス通信 | HTTP→XCUITest変換 | UI操作実行 |
+| **動作場所** | ホストPC | iOSデバイス上 | iOSデバイス上 |
 
 #### iOS通信プロトコル
 
@@ -500,6 +601,45 @@ void main() {
 | ホットリロード連携 | Marionette MCP | コード変更→即確認 |
 | リリースビルド検証 | Maestro/Mobile | Marionetteはデバッグ/profileのみ |
 | iOS/Androidモバイル | Maestro/Mobile | Marionetteはデスクトップ専用 |
+
+---
+
+## iOSアプローチの比較
+
+MaestroとMobile MCPは**どちらもXCUITestを最終的に使う**が、中間層が異なる。
+
+| 項目 | Maestro | Mobile MCP |
+|------|---------|------------|
+| **HTTPサーバー** | 独自XCUITestランナー | WDA (Appium製) |
+| **ポート** | 22087 | 8100 |
+| **開発元** | Maestro開発チーム | Facebook→Appium |
+| **デバイス通信** | 独自実装 | go-ios |
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     共通: XCUITest (Apple公式)                  │
+└─────────────────────────────────────────────────────────────────┘
+                    ▲                           ▲
+                    │                           │
+┌───────────────────┴───────────┐ ┌─────────────┴───────────────┐
+│  Maestro XCUITest Runner      │ │  WebDriverAgent (WDA)       │
+│  - Swift製                    │ │  - Objective-C製            │
+│  - Maestro独自開発            │ │  - Appium管理               │
+│  - ポート22087                │ │  - ポート8100               │
+└───────────────────┬───────────┘ └─────────────┬───────────────┘
+                    │ HTTP                      │ HTTP
+┌───────────────────┴───────────┐ ┌─────────────┴───────────────┐
+│  Maestro CLI (Kotlin)         │ │  mobilecli (Go)             │
+│  + simctl (シミュレータ管理)   │ │  + go-ios (デバイス通信)     │
+└───────────────────────────────┘ └─────────────────────────────┘
+```
+
+**なぜ両者とも独自実装が必要か？**
+
+Appleは公式のリモートUI操作APIを提供していないため、以下の迂回が必要：
+1. XCUITestランナーをデバイス上でHTTPサーバーとして起動
+2. ホストPCからHTTPリクエストでコマンド送信
+3. ランナーがXCUITest APIを呼び出して実行
 
 ---
 
