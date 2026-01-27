@@ -11,7 +11,7 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
             title: 'iOS Internals',
             header: FlutterDeckHeaderConfiguration(title: 'iOS通信の仕組み'),
             steps: 2,
-          ),
+                      ),
         );
 
   @override

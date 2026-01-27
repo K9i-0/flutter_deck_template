@@ -31,7 +31,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
                   color: ThemeConfig.textPrimary,
                 ),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 32),
               Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +58,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
                               code: "ValueKey('submit_button')",
                             ),
                           if (step >= 2) ...[
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                             _buildExplanationCard(
                               context,
                               number: '2',
@@ -69,7 +69,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
                             ),
                           ],
                           if (step >= 3) ...[
-                            const SizedBox(height: 24),
+                            const SizedBox(height: 16),
                             _buildExplanationCard(
                               context,
                               number: '3',
@@ -195,7 +195,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
     final theme = FlutterDeckTheme.of(context);
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
@@ -208,8 +208,8 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
               color: color,
               shape: BoxShape.circle,
@@ -219,13 +219,13 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
                 number,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,18 +262,18 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
                     ],
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Text(
                   description,
                   style: theme.textTheme.bodySmall.copyWith(
                     color: ThemeConfig.textSecondary,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
-                    vertical: 8,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
                     color: ThemeConfig.surfaceSecondary,

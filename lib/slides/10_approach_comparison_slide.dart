@@ -121,24 +121,25 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
   Widget _buildExternalDiagram(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         _buildBox(context, 'MCP Server', ThemeConfig.accentOrange),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _buildArrowDown(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _buildBox(context, 'OS API', ThemeConfig.textSecondary),
         Text(
           '(XCUITest / ADB)',
           style: TextStyle(
             color: ThemeConfig.textSecondary,
-            fontSize: 20,
+            fontSize: 18,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _buildArrowDown(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
@@ -147,18 +148,19 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.phone_android,
                 color: ThemeConfig.accentOrange,
-                size: 48,
+                size: 40,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
                 'アプリ（外部操作）',
                 style: TextStyle(
                   color: ThemeConfig.textPrimary,
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -172,13 +174,14 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
   Widget _buildInternalDiagram(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         _buildBox(context, 'MCP Server', ThemeConfig.accentBlue),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         _buildArrowDown(),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: ThemeConfig.accentBlue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
@@ -188,6 +191,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -195,24 +199,24 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
                   Icon(
                     Icons.phone_android,
                     color: ThemeConfig.accentBlue,
-                    size: 48,
+                    size: 40,
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
                   Text(
                     'Flutterアプリ',
                     style: TextStyle(
                       color: ThemeConfig.textPrimary,
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
+                  horizontal: 16,
+                  vertical: 10,
                 ),
                 decoration: BoxDecoration(
                   color: ThemeConfig.accentBlue.withValues(alpha: 0.2),
@@ -223,7 +227,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: ThemeConfig.accentBlue,
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

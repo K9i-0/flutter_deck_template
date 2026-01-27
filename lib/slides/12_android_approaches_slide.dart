@@ -80,6 +80,7 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
     final theme = FlutterDeckTheme.of(context);
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           title,
@@ -103,13 +104,13 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
         Expanded(child: diagram),
         if (features.isNotEmpty) ...[
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           ...features.map(
             (feature) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: 6),
               child: Row(
                 children: [
                   SizedBox(
@@ -142,11 +143,12 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
   Widget _buildMaestroDiagram(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         _buildBox('Maestro CLI', ThemeConfig.accentOrange, subtitle: 'ホストPC'),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         _buildConnectionLine('gRPC (ポート7001)', ThemeConfig.accentOrange),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -165,20 +167,20 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
                   fontSize: 18,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               _buildBox(
                 'Instrumentation Test',
                 ThemeConfig.accentOrange,
                 subtitle: 'gRPCサーバー常駐',
                 smaller: true,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Icon(
                 Icons.arrow_downward,
                 color: ThemeConfig.textSecondary,
-                size: 24,
+                size: 20,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               _buildBox(
                 'UIAutomator',
                 Colors.grey,
@@ -195,11 +197,12 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
   Widget _buildMobileMcpDiagram(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         _buildBox('mobilecli', ThemeConfig.accentGreen, subtitle: 'ホストPC'),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         _buildConnectionLine('ADB shell', ThemeConfig.accentGreen),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -218,11 +221,11 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
                   fontSize: 18,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
-                  vertical: 16,
+                  vertical: 12,
                 ),
                 decoration: BoxDecoration(
                   color: ThemeConfig.accentGreen.withValues(alpha: 0.1),
