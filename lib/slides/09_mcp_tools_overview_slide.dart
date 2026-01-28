@@ -63,7 +63,7 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     icon: Icons.desktop_mac,
                     color: ThemeConfig.accentBlue,
                     features: [
-                      'macOS / Linux / Windows',
+                      '全プラットフォーム',
                       'VM Service Protocol',
                       'Flutter特化・軽量',
                     ],

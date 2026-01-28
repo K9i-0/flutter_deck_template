@@ -72,7 +72,7 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
         '対応OS',
         'iOS / Android',
         'iOS / Android',
-        'macOS / Linux / Win',
+        '全プラットフォーム',
       ],
       [
         'アプリ改修',

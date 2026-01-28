@@ -56,7 +56,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
                   'Flutter内部APIを使用',
                   'アプリに統合が必要',
                   'デバッグビルドのみ',
-                  'デスクトップ専用',
+                  '全プラットフォーム対応',
                 ],
               ),
             ),

@@ -55,10 +55,10 @@ class SummarySlide extends FlutterDeckSlideWidget {
                       child: _buildRecommendationCard(
                         context,
                         icon: Icons.desktop_mac,
-                        title: 'Flutter\nデスクトップアプリ',
+                        title: 'Flutter\n全プラットフォーム',
                         tools: 'Marionette MCP',
                         reasons: [
-                          'デスクトップ専用',
+                          '全プラットフォーム対応',
                           'Hot Reload連携',
                           '軽量・高速',
                         ],

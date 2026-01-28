@@ -16,13 +16,13 @@
 | **最新バージョン** | CLI 2.1.0 | 0.0.41 | 0.3.0 |
 | **実装言語** | Kotlin + Swift | TypeScript + Go | Dart |
 | **ライセンス** | Apache 2.0 | MIT | MIT |
-| **対応プラットフォーム** | iOS/Android/Web | iOS/Android | macOS/Linux/Windows |
+| **対応プラットフォーム** | iOS/Android/Web | iOS/Android | 全プラットフォーム |
 | **iOS通信** | HTTP (独自XCUITestランナー) | HTTP (WDA/Appium製) | - |
 | **Android通信** | **gRPC** (常駐サービス) | **ADB** (コマンド直接) | - |
 | **iOSポート** | 22087 | 8100 | - |
 | **Androidポート** | 7001 | - (ADB経由) | - |
 | **Flutterアプリ対応** | 不要（Semantics推奨） | 不要 | marionette_flutter統合必須 |
-| **デスクトップ対応** | ✗ | ✗ | ✓（デスクトップ専用） |
+| **デスクトップ対応** | ✗ | ✗ | ✓（全プラットフォーム） |
 | **リリースモード** | ✓ | ✓ | ✗（デバッグ/profileのみ） |
 
 ---
@@ -635,7 +635,7 @@ type ControllableDevice interface {
 ### 概要
 - **Flutter特化**のMCP
 - Flutter独自の仕組み（VM Service Protocol）で動作
-- **デスクトップ専用**（macOS/Linux/Windows）
+- **全プラットフォーム対応**（デバッグ/profileモードのみ）
 
 ### 開発元
 - **LeanCode**（Patrol UIテストフレームワークの開発元）
@@ -650,7 +650,7 @@ AIエージェント → Marionette MCP → VM Service Protocol → Flutterア�
 
 - Flutter VM Service Protocolを使用
 - ウィジェットツリーを直接操作
-- **デスクトップアプリ専用**（MCPサーバーがデスクトッププラットフォームのみ対応）
+- **全プラットフォーム対応**（iOS/Android/Web/デスクトップ）
 
 ### 内部実装の詳細
 
@@ -837,7 +837,7 @@ bool _isHittable(Element element) {
 | **通信プロトコル** | VM Service (Dart専用) | HTTP/gRPC/ADB |
 | **アプリ改修** | **必要** (MarionetteBinding) | 不要 |
 | **リリースビルド** | ✗ 不可 | ✓ 可能 |
-| **プラットフォーム** | デスクトップのみ | iOS/Android |
+| **プラットフォーム** | 全プラットフォーム | iOS/Android |
 
 ```
 【外部からのアプローチ】Maestro/Mobile MCP
@@ -935,7 +935,6 @@ void main() {
 ### 制限事項
 
 - **デバッグ/profileモードのみ対応**（リリースビルド非対応）
-- **デスクトッププラットフォーム専用**（iOS/Androidは非対応）
 - VM Service URIの取得が必要（やや不安定な場合あり）
 
 ---
@@ -969,10 +968,9 @@ void main() {
 |-------------|---------|------|
 | iOS/Android実機E2E | Maestro MCP | resource-idで安定、YAML再利用 |
 | 単発の高速操作 | Mobile MCP | 単一操作が高速 |
-| Flutterデスクトップアプリ | Marionette MCP | デスクトップ専用・Flutter特化 |
+| Flutter全プラットフォーム | Marionette MCP | 全プラットフォーム・Flutter特化 |
 | ホットリロード連携 | Marionette MCP | コード変更→即確認 |
 | リリースビルド検証 | Maestro/Mobile | Marionetteはデバッグ/profileのみ |
-| iOS/Androidモバイル | Maestro/Mobile | Marionetteはデスクトップ専用 |
 
 ---
 
