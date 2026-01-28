@@ -57,6 +57,7 @@ class PresentationApp extends StatelessWidget {
               MainTopicSlide(),
               UiVerificationArchitectureSlide(),
               McpToolsOverviewSlide(),
+              DartMcpComplementSlide(),
               ApproachComparisonSlide(),
               IosInternalsSlide(),
               AndroidApproachesSlide(),
