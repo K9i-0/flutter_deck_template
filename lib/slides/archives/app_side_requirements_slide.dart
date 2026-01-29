@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
-
-import '../config/theme_config.dart';
+import 'package:flutter_deck_template/config/theme_config.dart';
 
 class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
   const AppSideRequirementsSlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/app-side-requirements',
-            title: 'App Side Requirements',
-            header: FlutterDeckHeaderConfiguration(title: 'アプリ側の対応'),
-            steps: 3,
-          ),
-        );
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/app-side-requirements',
+          title: 'App Side Requirements',
+          header: FlutterDeckHeaderConfiguration(title: 'アプリ側の対応'),
+          steps: 3,
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -97,12 +96,9 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           '優先度',
-          style: TextStyle(
-            color: ThemeConfig.textSecondary,
-            fontSize: 20,
-          ),
+          style: TextStyle(color: ThemeConfig.textSecondary, fontSize: 20),
         ),
         const SizedBox(height: 16),
         // ピラミッド
@@ -199,10 +195,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withValues(alpha: 0.5),
-          width: 2,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,10 +203,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
           Container(
             width: 32,
             height: 32,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             child: Center(
               child: Text(
                 number,
@@ -281,7 +271,7 @@ class AppSideRequirementsSlide extends FlutterDeckSlideWidget {
                   ),
                   child: Text(
                     code,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: ThemeConfig.textPrimary,
                       fontSize: 18,
                       fontFamily: 'monospace',

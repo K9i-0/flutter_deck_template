@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
-
-import '../config/theme_config.dart';
+import 'package:flutter_deck_template/config/theme_config.dart';
 
 class ImplementationExampleSlide extends FlutterDeckSlideWidget {
   const ImplementationExampleSlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/implementation-example',
-            title: 'Implementation Example',
-            header: FlutterDeckHeaderConfiguration(title: '実装例'),
-            steps: 2,
-          ),
-        );
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/implementation-example',
+          title: 'Implementation Example',
+          header: FlutterDeckHeaderConfiguration(title: '実装例'),
+          steps: 2,
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -39,9 +38,7 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
                     (false, "  child: const Text('送信'),"),
                     (false, ")"),
                   ],
-                  mcpCode: step >= 2
-                      ? "tap(key: 'submit_btn')"
-                      : null,
+                  mcpCode: step >= 2 ? "tap(key: 'submit_btn')" : null,
                 ),
               ),
               const SizedBox(width: 32),
@@ -62,9 +59,7 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
                     (false, "  ),"),
                     (false, ")"),
                   ],
-                  mcpCode: step >= 2
-                      ? "tap_on(id: 'submit_btn')"
-                      : null,
+                  mcpCode: step >= 2 ? "tap_on(id: 'submit_btn')" : null,
                 ),
               ),
             ],
@@ -109,10 +104,7 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
           decoration: BoxDecoration(
             color: const Color(0xFF1E1E1E),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: color.withValues(alpha: 0.3),
-              width: 2,
-            ),
+            border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,8 +123,9 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
                     color: isHighlight ? color : Colors.white70,
                     fontSize: 20,
                     fontFamily: 'monospace',
-                    fontWeight:
-                        isHighlight ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: isHighlight
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               );
@@ -148,21 +141,14 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: color,
-                width: 2,
-              ),
+              border: Border.all(color: color, width: 2),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    Icon(
-                      Icons.play_arrow,
-                      color: color,
-                      size: 24,
-                    ),
+                    Icon(Icons.play_arrow, color: color, size: 24),
                     const SizedBox(width: 8),
                     Text(
                       'MCP呼び出し',

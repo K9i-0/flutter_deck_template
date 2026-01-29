@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
-
-import '../config/theme_config.dart';
+import 'package:flutter_deck_template/config/theme_config.dart';
 
 class ComparisonTableSlide extends FlutterDeckSlideWidget {
   const ComparisonTableSlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/comparison-table',
-            title: 'Comparison Table',
-            header: FlutterDeckHeaderConfiguration(title: '比較表'),
-          ),
-        );
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/comparison-table',
+          title: 'Comparison Table',
+          header: FlutterDeckHeaderConfiguration(title: '比較表'),
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -22,9 +21,7 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
         padding: const EdgeInsets.all(48),
         child: Column(
           children: [
-            Expanded(
-              child: _buildComparisonTable(context),
-            ),
+            Expanded(child: _buildComparisonTable(context)),
             const SizedBox(height: 24),
             // トークン効率の注釈
             Container(
@@ -39,7 +36,7 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.info_outline,
                     color: ThemeConfig.accentBlue,
                     size: 28,
@@ -68,42 +65,12 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
 
     final headers = ['', 'Maestro MCP', 'Mobile MCP', 'Marionette MCP'];
     final rows = [
-      [
-        '対応OS',
-        'iOS / Android',
-        'iOS / Android',
-        '全プラットフォーム',
-      ],
-      [
-        'アプリ改修',
-        '不要',
-        '不要',
-        '必要',
-      ],
-      [
-        'リリースビルド',
-        '○',
-        '○',
-        '×',
-      ],
-      [
-        'セットアップ',
-        'CLI install',
-        'npx',
-        'dart pub global',
-      ],
-      [
-        'ツール数',
-        '14',
-        '19',
-        '9',
-      ],
-      [
-        'トークン占有率',
-        '1.16%',
-        '1.57%',
-        '0.65%',
-      ],
+      ['対応OS', 'iOS / Android', 'iOS / Android', '全プラットフォーム'],
+      ['アプリ改修', '不要', '不要', '必要'],
+      ['リリースビルド', '○', '○', '×'],
+      ['セットアップ', 'CLI install', 'npx', 'dart pub global'],
+      ['ツール数', '14', '19', '9'],
+      ['トークン占有率', '1.16%', '1.57%', '0.65%'],
     ];
 
     final toolColors = [
@@ -141,8 +108,9 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
                             ? BoxDecoration(
                                 border: Border(
                                   left: BorderSide(
-                                    color: ThemeConfig.textSecondary
-                                        .withValues(alpha: 0.3),
+                                    color: ThemeConfig.textSecondary.withValues(
+                                      alpha: 0.3,
+                                    ),
                                   ),
                                 ),
                               )
@@ -172,20 +140,24 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
                         decoration: BoxDecoration(
                           color: rowIndex.isEven
                               ? Colors.transparent
-                              : ThemeConfig.surfaceSecondary
-                                  .withValues(alpha: 0.3),
+                              : ThemeConfig.surfaceSecondary.withValues(
+                                  alpha: 0.3,
+                                ),
                           border: Border(
                             top: BorderSide(
-                              color: ThemeConfig.textSecondary
-                                  .withValues(alpha: 0.2),
+                              color: ThemeConfig.textSecondary.withValues(
+                                alpha: 0.2,
+                              ),
                             ),
                           ),
                         ),
                         child: Row(
                           children: [
-                            for (var colIndex = 0;
-                                colIndex < rows[rowIndex].length;
-                                colIndex++)
+                            for (
+                              var colIndex = 0;
+                              colIndex < rows[rowIndex].length;
+                              colIndex++
+                            )
                               Expanded(
                                 flex: colIndex == 0 ? 2 : 3,
                                 child: Container(
@@ -236,7 +208,7 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
 
     // 特殊なセル表示
     if (value == '○') {
-      return Center(
+      return const Center(
         child: Icon(
           Icons.check_circle,
           color: ThemeConfig.accentGreen,
@@ -267,10 +239,7 @@ class ComparisonTableSlide extends FlutterDeckSlideWidget {
     return Center(
       child: highlightColor != null
           ? Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 4,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
                 color: highlightColor.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(6),
