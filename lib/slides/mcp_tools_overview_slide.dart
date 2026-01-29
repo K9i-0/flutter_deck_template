@@ -34,8 +34,9 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     color: ThemeConfig.accentOrange,
                     features: [
                       'iOS / Android',
-                      'XCUITest / UIAutomator',
-                      'YAMLフロー再利用可',
+                      'e2e実績のあるCLIツールのMCP版',
+                      'maestro CLIに統合済み',
+                      'e2eシナリオのYAML再利用可',
                     ],
                   ),
                 ),
@@ -49,8 +50,9 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     color: ThemeConfig.accentGreen,
                     features: [
                       'iOS / Android',
-                      'WDA / ADB',
-                      'セットアップ簡単',
+                      'マルチプラットフォームMCPの先駆者',
+                      'npxでインストール（常に最新版）',
+                      'アップデート頻度が高い',
                     ],
                   ),
                 ),
@@ -63,9 +65,10 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     icon: Icons.desktop_mac,
                     color: ThemeConfig.accentBlue,
                     features: [
-                      '全プラットフォーム',
-                      'VM Service Protocol',
-                      'Flutter特化・軽量',
+                      '全プラットフォーム対応',
+                      'Flutterパッケージとして実装',
+                      'Flutter内部の仕組みで動作',
+                      '他とアプローチが異なる',
                     ],
                   ),
                 ),
@@ -73,7 +76,7 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
             ),
             const Spacer(),
             Text(
-              'それぞれ異なるアプローチでUI検証を実現',
+              'それぞれ触った結果、これ一択という感じではなかった',
               style: theme.textTheme.bodyLarge.copyWith(
                 color: ThemeConfig.textSecondary,
               ),
