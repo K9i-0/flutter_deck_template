@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
-
-import '../config/theme_config.dart';
+import 'package:flutter_deck_template/config/theme_config.dart';
 
 class SummarySlide extends FlutterDeckSlideWidget {
   const SummarySlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/summary',
-            title: 'Summary',
-            header: FlutterDeckHeaderConfiguration(title: 'まとめ'),
-            steps: 2,
-          ),
-        );
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/summary',
+          title: 'Summary',
+          header: FlutterDeckHeaderConfiguration(title: 'まとめ'),
+          steps: 2,
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -42,11 +41,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
                         icon: Icons.phone_android,
                         title: 'iOS/Android\nモバイルアプリ',
                         tools: 'Maestro MCP / Mobile MCP',
-                        reasons: [
-                          'ネイティブAPI経由で操作',
-                          'アプリ改修不要',
-                          'リリースビルドも対応',
-                        ],
+                        reasons: ['ネイティブAPI経由で操作', 'アプリ改修不要', 'リリースビルドも対応'],
                         color: ThemeConfig.accentOrange,
                       ),
                     ),
@@ -57,11 +52,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
                         icon: Icons.desktop_mac,
                         title: 'Flutter\n全プラットフォーム',
                         tools: 'Marionette MCP',
-                        reasons: [
-                          '全プラットフォーム対応',
-                          'Hot Reload連携',
-                          '軽量・高速',
-                        ],
+                        reasons: ['全プラットフォーム対応', 'Hot Reload連携', '軽量・高速'],
                         color: ThemeConfig.accentBlue,
                       ),
                     ),
@@ -72,11 +63,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
                         icon: Icons.build,
                         title: 'CI/CD\n自動テスト',
                         tools: 'Maestro MCP',
-                        reasons: [
-                          'YAMLフロー再利用',
-                          '安定した接続',
-                          '豊富な機能',
-                        ],
+                        reasons: ['YAMLフロー再利用', '安定した接続', '豊富な機能'],
                         color: ThemeConfig.accentGreen,
                       ),
                     ),
@@ -146,10 +133,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withValues(alpha: 0.5),
-          width: 2,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.5), width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,11 +146,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
                   color: color.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 32,
-                ),
+                child: Icon(icon, color: color, size: 32),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -184,10 +164,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
           const SizedBox(height: 16),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
@@ -208,11 +185,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.check,
-                    color: color,
-                    size: 20,
-                  ),
+                  Icon(Icons.check, color: color, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
