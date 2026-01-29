@@ -12,6 +12,7 @@ export 'main_topic_slide.dart';
 export 'marionette_vm_service_slide.dart';
 export 'mcp_summary_slide.dart';
 export 'mcp_tools_overview_slide.dart';
+export 'practical_experience_slide.dart';
 export 'next_stage_slide.dart';
 export 'self_intro_slide.dart';
 export 'title_slide.dart';

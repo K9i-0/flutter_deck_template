@@ -66,6 +66,7 @@ class PresentationApp extends StatelessWidget {
               MarionetteVmServiceSlide(),
               UiOperationComparisonSlide(),
               McpSummarySlide(),
+              PracticalExperienceSlide(),
               // AppSideRequirementsSlide(),
               // ImplementationExampleSlide(),
               // ComparisonTableSlide(),
