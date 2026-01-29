@@ -13,6 +13,7 @@ export 'dart_mcp_complement_slide.dart';
 export 'approach_comparison_slide.dart';
 export 'ios_internals_slide.dart';
 export 'android_approaches_slide.dart';
+export 'accessibility_element_slide.dart';
 export 'marionette_vm_service_slide.dart';
 export 'app_side_requirements_slide.dart';
 export 'implementation_example_slide.dart';
