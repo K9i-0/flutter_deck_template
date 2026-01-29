@@ -43,20 +43,30 @@ class _InteractiveArchitectureContentState
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 3,
-          child: _LeftContent(mode: _mode),
-        ),
-        Expanded(
-          flex: 2,
-          child: _RightContent(
-            mode: _mode,
-            onModeChanged: _onModeChanged,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        if (_mode != InteractionMode.none) {
+          setState(() {
+            _mode = InteractionMode.none;
+          });
+        }
+      },
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: _LeftContent(mode: _mode),
           ),
-        ),
-      ],
+          Expanded(
+            flex: 2,
+            child: _RightContent(
+              mode: _mode,
+              onModeChanged: _onModeChanged,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
