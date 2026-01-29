@@ -5,65 +5,96 @@ import '../config/theme_config.dart';
 
 class AndroidApproachesSlide extends FlutterDeckSlideWidget {
   const AndroidApproachesSlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/android-approaches',
-            title: 'Android Approaches',
-            header: FlutterDeckHeaderConfiguration(title: 'Androidの2つのアプローチ'),
-            steps: 2,
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/android-approaches',
+          title: 'Android Approaches',
+          header: FlutterDeckHeaderConfiguration(
+            title: '外部アプローチ：Android通信の仕組み',
           ),
-        );
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
     final theme = FlutterDeckTheme.of(context);
 
     return FlutterDeckSlide.blank(
-      builder: (context) => FlutterDeckSlideStepsBuilder(
-        builder: (context, step) => Padding(
-          padding: const EdgeInsets.all(48),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Maestro MCP方式
-              Expanded(
-                child: _buildApproachCard(
-                  context,
-                  title: 'Maestro MCP',
-                  subtitle: '常駐サーバー型',
-                  color: ThemeConfig.accentOrange,
-                  diagram: _buildMaestroDiagram(context),
-                  features: step >= 2
-                      ? [
-                          ('通信方式', 'gRPC（接続維持）'),
-                          ('デバイス側', 'APK 2つインストール'),
-                          ('初回セットアップ', 'サーバー起動待ち'),
-                          ('パフォーマンス', '高速（接続再利用）'),
-                        ]
-                      : [],
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(48),
+        child: Column(
+          children: [
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Maestro MCP方式
+                  Expanded(
+                    child: _buildApproachCard(
+                      context,
+                      title: 'Maestro MCP',
+                      subtitle: 'Instrumentation Test + gRPC',
+                      color: ThemeConfig.accentOrange,
+                      diagram: _buildMaestroDiagram(context),
+                      features: const [
+                        ('通信方式', 'gRPC（接続維持）'),
+                        ('デバイス側', 'APK 2つインストール'),
+                        ('API', 'UiAutomator直接アクセス'),
+                        ('速度', '高速（接続再利用）'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 32),
+                  // Mobile MCP方式
+                  Expanded(
+                    child: _buildApproachCard(
+                      context,
+                      title: 'Mobile MCP',
+                      subtitle: 'コマンド直接実行型',
+                      color: ThemeConfig.accentGreen,
+                      diagram: _buildMobileMcpDiagram(context),
+                      features: const [
+                        ('通信方式', 'ADB shell（毎回実行）'),
+                        ('デバイス側', 'インストール不要'),
+                        ('API', 'adb shell input'),
+                        ('速度', '毎回プロセス起動'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: ThemeConfig.accentBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: ThemeConfig.accentBlue.withValues(alpha: 0.5),
+                  width: 2,
                 ),
               ),
-              const SizedBox(width: 32),
-              // Mobile MCP方式
-              Expanded(
-                child: _buildApproachCard(
-                  context,
-                  title: 'Mobile MCP',
-                  subtitle: 'コマンド直接実行型',
-                  color: ThemeConfig.accentGreen,
-                  diagram: _buildMobileMcpDiagram(context),
-                  features: step >= 2
-                      ? [
-                          ('通信方式', 'ADB（毎回実行）'),
-                          ('デバイス側', 'インストール不要'),
-                          ('初回セットアップ', '不要（即実行）'),
-                          ('パフォーマンス', 'オーバーヘッドあり'),
-                        ]
-                      : [],
-                ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    color: ThemeConfig.accentBlue,
+                    size: 32,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      'UIAutomator: Android公式UIテストFW（アプリ内部に直接アクセス）  |  ADB: デバッグ用CLI（外部からコマンドで操作）',
+                      style: theme.textTheme.bodyMedium.copyWith(
+                        color: ThemeConfig.textPrimary,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -104,13 +135,13 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Expanded(child: diagram),
         if (features.isNotEmpty) ...[
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           ...features.map(
             (feature) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.only(bottom: 4),
               child: Row(
                 children: [
                   SizedBox(
@@ -146,13 +177,13 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildBox('Maestro CLI', ThemeConfig.accentOrange, subtitle: 'ホストPC'),
-        const SizedBox(height: 8),
-        _buildConnectionLine('gRPC (ポート7001)', ThemeConfig.accentOrange),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
+        _buildConnectionLine('gRPC（接続維持）', ThemeConfig.accentOrange),
+        const SizedBox(height: 4),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: ThemeConfig.textSecondary.withValues(alpha: 0.5),
               width: 2,
@@ -160,27 +191,27 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
           ),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Android端末',
                 style: TextStyle(
                   color: ThemeConfig.textSecondary,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               _buildBox(
                 'Instrumentation Test',
                 ThemeConfig.accentOrange,
-                subtitle: 'gRPCサーバー常駐',
+                subtitle: '@Test内でgRPCサーバー起動',
                 smaller: true,
               ),
-              const SizedBox(height: 6),
-              Icon(
+              const SizedBox(height: 4),
+              const Icon(
                 Icons.arrow_downward,
                 color: ThemeConfig.textSecondary,
-                size: 20,
+                size: 16,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               _buildBox(
                 'UIAutomator',
                 Colors.grey,
@@ -200,13 +231,13 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildBox('mobilecli', ThemeConfig.accentGreen, subtitle: 'ホストPC'),
-        const SizedBox(height: 8),
-        _buildConnectionLine('ADB shell', ThemeConfig.accentGreen),
-        const SizedBox(height: 8),
+        const SizedBox(height: 4),
+        _buildConnectionLine('ADB shell（毎回実行）', ThemeConfig.accentGreen),
+        const SizedBox(height: 4),
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: ThemeConfig.textSecondary.withValues(alpha: 0.5),
               width: 2,
@@ -214,39 +245,36 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
           ),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Android端末',
                 style: TextStyle(
                   color: ThemeConfig.textSecondary,
-                  fontSize: 18,
+                  fontSize: 16,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
+                  horizontal: 20,
+                  vertical: 10,
                 ),
                 decoration: BoxDecoration(
                   color: ThemeConfig.accentGreen.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: ThemeConfig.accentGreen,
-                    width: 2,
-                  ),
+                  border: Border.all(color: ThemeConfig.accentGreen, width: 2),
                 ),
-                child: Column(
+                child: const Column(
                   children: [
                     Text(
                       'input tap 100 200',
                       style: TextStyle(
                         color: ThemeConfig.accentGreen,
-                        fontSize: 18,
+                        fontSize: 16,
                         fontFamily: 'monospace',
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 2),
                     Text(
                       '実行して終了',
                       style: TextStyle(
@@ -309,11 +337,7 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 2,
-          height: 20,
-          color: color,
-        ),
+        Container(width: 2, height: 20, color: color),
         const SizedBox(width: 8),
         Text(
           label,
@@ -324,11 +348,7 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Container(
-          width: 2,
-          height: 20,
-          color: color,
-        ),
+        Container(width: 2, height: 20, color: color),
       ],
     );
   }

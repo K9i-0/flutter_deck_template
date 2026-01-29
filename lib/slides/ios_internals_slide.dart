@@ -5,13 +5,13 @@ import '../config/theme_config.dart';
 
 class IosInternalsSlide extends FlutterDeckSlideWidget {
   const IosInternalsSlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/ios-internals',
-            title: 'iOS Internals',
-            header: FlutterDeckHeaderConfiguration(title: 'iOS通信の仕組み'),
-          ),
-        );
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/ios-internals',
+          title: 'iOS Internals',
+          header: FlutterDeckHeaderConfiguration(title: '外部アプローチ：iOS通信の仕組み'),
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -62,7 +62,10 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
                       color: ThemeConfig.accentGreen,
                       layers: [
                         _LayerInfo('mobilecli', 'Go製'),
-                        _LayerInfo('WDA (WebDriverAgent)', '元Facebook開発・現Appium管理'),
+                        _LayerInfo(
+                          'WDA (WebDriverAgent)',
+                          '元Facebook開発・現Appium管理',
+                        ),
                         _LayerInfo('XCUITest', 'Apple公式UIテストFW'),
                       ],
                     ),
@@ -83,7 +86,7 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.lightbulb_outline,
                     color: ThemeConfig.accentBlue,
                     size: 32,
@@ -137,7 +140,7 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
                 ),
                 if (i < layers.length - 1) ...[
                   const SizedBox(height: 8),
-                  Icon(
+                  const Icon(
                     Icons.arrow_downward,
                     color: ThemeConfig.textSecondary,
                     size: 28,
@@ -166,10 +169,7 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
       decoration: BoxDecoration(
         color: boxColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: boxColor,
-          width: 2,
-        ),
+        border: Border.all(color: boxColor, width: 2),
       ),
       child: Column(
         children: [
@@ -185,7 +185,7 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
           const SizedBox(height: 4),
           Text(
             layer.description,
-            style: TextStyle(
+            style: const TextStyle(
               color: ThemeConfig.textSecondary,
               fontSize: 18,
             ),
