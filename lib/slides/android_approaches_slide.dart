@@ -25,11 +25,11 @@ class AndroidApproachesSlide extends FlutterDeckSlideWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Maestro方式
+              // Maestro MCP方式
               Expanded(
                 child: _buildApproachCard(
                   context,
-                  title: 'Maestro',
+                  title: 'Maestro MCP',
                   subtitle: '常駐サーバー型',
                   color: ThemeConfig.accentOrange,
                   diagram: _buildMaestroDiagram(context),

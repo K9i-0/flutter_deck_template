@@ -10,8 +10,7 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
             route: '/ios-internals',
             title: 'iOS Internals',
             header: FlutterDeckHeaderConfiguration(title: 'iOS通信の仕組み'),
-            steps: 2,
-                      ),
+          ),
         );
 
   @override
@@ -19,99 +18,89 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
     final theme = FlutterDeckTheme.of(context);
 
     return FlutterDeckSlide.blank(
-      builder: (context) => FlutterDeckSlideStepsBuilder(
-        builder: (context, step) => Padding(
-          padding: const EdgeInsets.all(48),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (step >= 1) ...[
-                Text(
-                  'どちらも最終的にXCUITestを使用',
-                  style: theme.textTheme.title.copyWith(
-                    color: ThemeConfig.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Apple公式のリモートUI操作APIが無いため、迂回が必要',
-                  style: theme.textTheme.bodyMedium.copyWith(
-                    color: ThemeConfig.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 32),
-              ],
-              Expanded(
-                child: Row(
-                  children: [
-                    // Maestro側
-                    Expanded(
-                      child: _buildArchitectureColumn(
-                        context,
-                        title: 'Maestro',
-                        color: ThemeConfig.accentOrange,
-                        layers: [
-                          _LayerInfo('Maestro CLI', 'Kotlin製'),
-                          _LayerInfo('独自XCUITestランナー', 'Swift製・ポート22087'),
-                          _LayerInfo('XCUITest', 'Apple公式'),
-                        ],
-                        highlight: step >= 2,
-                        highlightIndex: 1,
-                      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(48),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'どちらも最終的にXCUITestを使用',
+              style: theme.textTheme.title.copyWith(
+                color: ThemeConfig.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Apple公式のリモートUI操作APIが無いため、迂回が必要',
+              style: theme.textTheme.bodyMedium.copyWith(
+                color: ThemeConfig.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 32),
+            Expanded(
+              child: Row(
+                children: [
+                  // Maestro MCP側
+                  Expanded(
+                    child: _buildArchitectureColumn(
+                      context,
+                      title: 'Maestro MCP',
+                      color: ThemeConfig.accentOrange,
+                      layers: [
+                        _LayerInfo('Maestro CLI', 'Kotlin製'),
+                        _LayerInfo('独自XCUITestランナー', 'Swift製'),
+                        _LayerInfo('XCUITest', 'Apple公式UIテストFW'),
+                      ],
                     ),
-                    const SizedBox(width: 48),
-                    // Mobile MCP側
-                    Expanded(
-                      child: _buildArchitectureColumn(
-                        context,
-                        title: 'Mobile MCP',
-                        color: ThemeConfig.accentGreen,
-                        layers: [
-                          _LayerInfo('mobilecli', 'Go製'),
-                          _LayerInfo('WDA (WebDriverAgent)', 'Appium管理・ポート8100'),
-                          _LayerInfo('XCUITest', 'Apple公式'),
-                        ],
-                        highlight: step >= 2,
-                        highlightIndex: 1,
-                      ),
+                  ),
+                  const SizedBox(width: 48),
+                  // Mobile MCP側
+                  Expanded(
+                    child: _buildArchitectureColumn(
+                      context,
+                      title: 'Mobile MCP',
+                      color: ThemeConfig.accentGreen,
+                      layers: [
+                        _LayerInfo('mobilecli', 'Go製'),
+                        _LayerInfo('WDA (WebDriverAgent)', '元Facebook開発・現Appium管理'),
+                        _LayerInfo('XCUITest', 'Apple公式UIテストFW'),
+                      ],
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: ThemeConfig.accentBlue.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: ThemeConfig.accentBlue.withValues(alpha: 0.5),
+                  width: 2,
                 ),
               ),
-              if (step >= 2) ...[
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: ThemeConfig.accentBlue.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: ThemeConfig.accentBlue.withValues(alpha: 0.5),
-                      width: 2,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.lightbulb_outline,
+                    color: ThemeConfig.accentBlue,
+                    size: 32,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Text(
+                      '中間層が異なる: Maestro MCPは独自開発、Mobile MCPはAppium製WDAを使用',
+                      style: theme.textTheme.bodyMedium.copyWith(
+                        color: ThemeConfig.textPrimary,
+                      ),
                     ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.lightbulb_outline,
-                        color: ThemeConfig.accentBlue,
-                        size: 32,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Text(
-                          '中間層が異なる: Maestroは独自開発、Mobile MCPはAppium製WDAを使用',
-                          style: theme.textTheme.bodyMedium.copyWith(
-                            color: ThemeConfig.textPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
-          ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -122,8 +111,6 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
     required String title,
     required Color color,
     required List<_LayerInfo> layers,
-    bool highlight = false,
-    int highlightIndex = -1,
   }) {
     final theme = FlutterDeckTheme.of(context);
 
@@ -146,7 +133,6 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
                   context,
                   layer: layers[i],
                   color: color,
-                  isHighlighted: highlight && i == highlightIndex,
                   isAppleOfficial: i == layers.length - 1,
                 ),
                 if (i < layers.length - 1) ...[
@@ -170,21 +156,19 @@ class IosInternalsSlide extends FlutterDeckSlideWidget {
     BuildContext context, {
     required _LayerInfo layer,
     required Color color,
-    bool isHighlighted = false,
     bool isAppleOfficial = false,
   }) {
     final boxColor = isAppleOfficial ? Colors.grey : color;
-    final borderWidth = isHighlighted ? 4.0 : 2.0;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
-        color: boxColor.withValues(alpha: isHighlighted ? 0.2 : 0.1),
+        color: boxColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isHighlighted ? color : boxColor,
-          width: borderWidth,
+          color: boxColor,
+          width: 2,
         ),
       ),
       child: Column(

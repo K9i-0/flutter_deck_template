@@ -62,7 +62,7 @@ class MarionetteVmServiceSlide extends FlutterDeckSlideWidget {
                       context,
                       icon: Icons.speed,
                       title: '軽量',
-                      description: '約1,700行の実装\nMaestro: ~50,000行',
+                      description: '約1,700行の実装\nMaestro MCP: ~50,000行',
                     ),
                     const SizedBox(height: 24),
                     _buildFeatureSection(

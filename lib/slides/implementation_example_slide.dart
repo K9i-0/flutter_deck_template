@@ -49,7 +49,7 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
               Expanded(
                 child: _buildCodeExample(
                   context,
-                  title: 'Maestro (Semantics)',
+                  title: 'Maestro MCP (Semantics)',
                   subtitle: 'iOS/Android・resource-idとして認識',
                   color: ThemeConfig.accentOrange,
                   codeLines: [

@@ -41,7 +41,7 @@ class SummarySlide extends FlutterDeckSlideWidget {
                         context,
                         icon: Icons.phone_android,
                         title: 'iOS/Android\nモバイルアプリ',
-                        tools: 'Maestro / Mobile MCP',
+                        tools: 'Maestro MCP / Mobile MCP',
                         reasons: [
                           'ネイティブAPI経由で操作',
                           'アプリ改修不要',
