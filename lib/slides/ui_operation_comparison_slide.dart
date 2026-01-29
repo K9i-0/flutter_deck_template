@@ -9,9 +9,7 @@ class UiOperationComparisonSlide extends FlutterDeckSlideWidget {
         configuration: const FlutterDeckSlideConfiguration(
           route: '/ui-operation-comparison',
           title: 'UI Operation Comparison',
-          header: FlutterDeckHeaderConfiguration(
-            title: 'UI操作の対応状況比較',
-          ),
+          header: FlutterDeckHeaderConfiguration(title: 'UI操作の対応状況比較'),
         ),
       );
 
@@ -54,18 +52,18 @@ class UiOperationComparisonSlide extends FlutterDeckSlideWidget {
           children: [
             _buildRankingBar(
               context,
-              label: 'Mobile MCP',
-              count: 7,
-              total: 8,
-              color: ThemeConfig.accentGreen,
-            ),
-            const SizedBox(width: 24),
-            _buildRankingBar(
-              context,
               label: 'Maestro MCP',
               count: 6,
               total: 8,
               color: ThemeConfig.accentOrange,
+            ),
+            const SizedBox(width: 24),
+            _buildRankingBar(
+              context,
+              label: 'Mobile MCP',
+              count: 7,
+              total: 8,
+              color: ThemeConfig.accentGreen,
             ),
             const SizedBox(width: 24),
             _buildRankingBar(
@@ -331,10 +329,13 @@ class UiOperationComparisonSlide extends FlutterDeckSlideWidget {
                   text: 'UI検証としては必要十分（基本操作は全MCP対応）',
                 ),
                 const SizedBox(height: 6),
+                _buildNoteItem(context, icon: '⚠️', text: '= 内部実装あり（MCP未公開）'),
+                const SizedBox(height: 6),
                 _buildNoteItem(
                   context,
-                  icon: '⚠️',
-                  text: '= 内部実装あり（MCP未公開）、Marionetteは技術的には可能と思われる',
+                  icon: '🎯',
+                  text: 'Maestro MCP: run_flowでYAML全機能が使える（他MCPにない力技が可能）',
+                  color: ThemeConfig.accentOrange,
                 ),
                 const SizedBox(height: 6),
                 _buildNoteItem(
@@ -342,13 +343,6 @@ class UiOperationComparisonSlide extends FlutterDeckSlideWidget {
                   icon: '📝',
                   text: 'Mobile MCP: CLIレベルではピンチ/D&D可能（MCP未公開）',
                   color: ThemeConfig.accentGreen,
-                ),
-                const SizedBox(height: 6),
-                _buildNoteItem(
-                  context,
-                  icon: '🎯',
-                  text: 'Maestro MCP: run_flowでYAML全機能が使える（他MCPにない力技が可能）',
-                  color: ThemeConfig.accentOrange,
                 ),
               ],
             ),
