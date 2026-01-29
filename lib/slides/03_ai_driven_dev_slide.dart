@@ -49,9 +49,34 @@ class AiDrivenDevSlide extends FlutterDeckSlideWidget {
                   style: theme.textTheme.title,
                 ),
                 const SizedBox(height: 32),
-                Text(
-                  '9割くらいAIエージェントに書かせてる',
-                  style: theme.textTheme.header,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '9割くらいAIエージェントに',
+                      style: theme.textTheme.header,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '書かせてる',
+                          style: theme.textTheme.header.copyWith(
+                            decoration: TextDecoration.lineThrough,
+                            decorationThickness: 3,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                        Text(
+                          '書いていただいている',
+                          style: theme.textTheme.header.copyWith(
+                            color: Colors.orange[700],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 16),
                 Text(
