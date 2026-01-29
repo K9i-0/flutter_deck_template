@@ -5,13 +5,13 @@ import '../config/theme_config.dart';
 
 class ApproachComparisonSlide extends FlutterDeckSlideWidget {
   const ApproachComparisonSlide({super.key})
-      : super(
-          configuration: const FlutterDeckSlideConfiguration(
-            route: '/approach-comparison',
-            title: 'Approach Comparison',
-            header: FlutterDeckHeaderConfiguration(title: '外部アプローチ vs 内部アプローチ'),
-          ),
-        );
+    : super(
+        configuration: const FlutterDeckSlideConfiguration(
+          route: '/approach-comparison',
+          title: 'Approach Comparison',
+          header: FlutterDeckHeaderConfiguration(title: '外部アプローチ vs 内部アプローチ'),
+        ),
+      );
 
   @override
   FlutterDeckSlide build(BuildContext context) {
@@ -27,7 +27,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
               child: _buildApproachColumn(
                 context,
                 title: '外部アプローチ',
-                subtitle: 'Maestro / Mobile MCP',
+                subtitle: 'Maestro MCP / Mobile MCP',
                 color: ThemeConfig.accentOrange,
                 diagram: _buildExternalDiagram(context),
                 points: [
@@ -128,12 +128,9 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
         _buildArrowDown(),
         const SizedBox(height: 12),
         _buildBox(context, 'OS API', ThemeConfig.textSecondary),
-        Text(
+        const Text(
           '(XCUITest / ADB)',
-          style: TextStyle(
-            color: ThemeConfig.textSecondary,
-            fontSize: 18,
-          ),
+          style: TextStyle(color: ThemeConfig.textSecondary, fontSize: 18),
         ),
         const SizedBox(height: 12),
         _buildArrowDown(),
@@ -147,7 +144,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
               width: 2,
             ),
           ),
-          child: Column(
+          child: const Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
@@ -155,7 +152,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
                 color: ThemeConfig.accentOrange,
                 size: 40,
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 'アプリ（外部操作）',
                 style: TextStyle(
@@ -185,15 +182,12 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
           decoration: BoxDecoration(
             color: ThemeConfig.accentBlue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: ThemeConfig.accentBlue,
-              width: 2,
-            ),
+            border: Border.all(color: ThemeConfig.accentBlue, width: 2),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
+              const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
@@ -201,7 +195,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
                     color: ThemeConfig.accentBlue,
                     size: 40,
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Text(
                     'Flutterアプリ',
                     style: TextStyle(
@@ -222,7 +216,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
                   color: ThemeConfig.accentBlue.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
+                child: const Text(
                   'MarionetteBinding\n（Widget Tree直接操作）',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -259,7 +253,7 @@ class ApproachComparisonSlide extends FlutterDeckSlideWidget {
   }
 
   Widget _buildArrowDown() {
-    return Icon(
+    return const Icon(
       Icons.arrow_downward,
       color: ThemeConfig.textSecondary,
       size: 32,
