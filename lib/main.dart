@@ -65,6 +65,7 @@ class PresentationApp extends StatelessWidget {
               AccessibilityElementSlide(),
               MarionetteVmServiceSlide(),
               UiOperationComparisonSlide(),
+              McpSummarySlide(),
               // AppSideRequirementsSlide(),
               // ImplementationExampleSlide(),
               // ComparisonTableSlide(),
