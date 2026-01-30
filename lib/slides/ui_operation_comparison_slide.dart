@@ -300,8 +300,6 @@ class UiOperationComparisonSlide extends FlutterDeckSlideWidget {
   }
 
   Widget _buildNoteSection(BuildContext context) {
-    final theme = FlutterDeckTheme.of(context);
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(

@@ -15,8 +15,6 @@ class ImplementationExampleSlide extends FlutterDeckSlideWidget {
 
   @override
   FlutterDeckSlide build(BuildContext context) {
-    final theme = FlutterDeckTheme.of(context);
-
     return FlutterDeckSlide.blank(
       builder: (context) => FlutterDeckSlideStepsBuilder(
         builder: (context, step) => Padding(

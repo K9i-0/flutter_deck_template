@@ -111,7 +111,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
             ),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.accessibility_new,
                   color: ThemeConfig.accentOrange,
                   size: 28,
@@ -145,7 +145,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
       child: Row(
         children: [
           if (depth > 0) ...[
-            Text(
+            const Text(
               '└─ ',
               style: TextStyle(
                 color: ThemeConfig.textSecondary,
@@ -289,7 +289,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
       children: [
         Text(
           comment,
-          style: TextStyle(
+          style: const TextStyle(
             color: ThemeConfig.textSecondary,
             fontSize: 16,
             fontFamily: 'monospace',
@@ -298,7 +298,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
         const SizedBox(height: 4),
         Text(
           code,
-          style: TextStyle(
+          style: const TextStyle(
             color: ThemeConfig.accentBlue,
             fontSize: 18,
             fontFamily: 'monospace',
@@ -352,7 +352,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
       ),
       child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.lightbulb_outline,
             color: ThemeConfig.accentGreen,
             size: 32,
@@ -366,7 +366,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
                 ),
                 children: [
                   const TextSpan(text: '調査開始時点: '),
-                  TextSpan(
+                  const TextSpan(
                     text: 'Maestro MCP充実',
                     style: TextStyle(
                       color: ThemeConfig.accentOrange,
@@ -374,7 +374,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
                     ),
                   ),
                   const TextSpan(text: ' / '),
-                  TextSpan(
+                  const TextSpan(
                     text: 'Mobile MCP欠けあり',
                     style: TextStyle(
                       color: ThemeConfig.accentGreen,

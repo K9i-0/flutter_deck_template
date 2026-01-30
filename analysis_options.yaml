@@ -7,3 +7,4 @@ linter:
     prefer_final_locals: true
     avoid_print: true
     require_trailing_commas: true
+    use_key_in_widget_constructors: false

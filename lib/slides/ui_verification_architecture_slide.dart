@@ -287,8 +287,8 @@ class _RightContent extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (isUiGrabSelected)
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 8),
                               child: Icon(
                                 Icons.arrow_upward,
                                 color: ThemeConfig.accentOrange,
@@ -357,8 +357,8 @@ class _RightContent extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (isUiOperateSelected)
-                            Padding(
-                              padding: const EdgeInsets.only(right: 8),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 8),
                               child: Icon(
                                 Icons.arrow_downward,
                                 color: ThemeConfig.accentGreen,
