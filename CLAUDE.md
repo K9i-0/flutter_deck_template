@@ -4,7 +4,65 @@
 
 flutter_deckを使用した登壇スライドテンプレート。Claude Codeと連携してスライドを簡単に作成・編集できる。
 
-## コマンド
+## 動作確認・開発
+
+> **重要**: 動作確認は **marionette MCP** を優先して使用すること。
+> ユーザーが既にアプリを起動している場合が多いため、まず接続を試みる。
+
+### UI検証（marionette MCP）【優先】
+
+スライドの動作確認・スクリーンショット取得はmarionette MCPを使用する。
+
+**接続手順:**
+1. 起動中のFlutterアプリを確認
+   ```bash
+   lsof -i -P -n | grep flutter_d | grep LISTEN
+   ```
+2. ポート番号を取得して接続
+   ```
+   mcp__marionette__connect: ws://127.0.0.1:<PORT>/ws
+   ```
+3. VS Codeから起動する場合は `--disable-service-auth-codes` が自動で付与される（launch.json設定済み）
+
+**スライド操作:**
+- **スクリーンショット**: `mcp__marionette__take_screenshots`
+- **次のスライド**: `mcp__marionette__tap` with `key: "nav_next"`
+- **前のスライド**: `mcp__marionette__tap` with `key: "nav_previous"`
+- **ホットリロード**: `mcp__marionette__hot_reload`
+
+**注意事項:**
+- ナビゲーションボタン（`< >`）は `kDebugMode` の時のみ表示される
+- タイマー左上に表示されるナビゲーションを使用してスライド移動
+
+### 特定スライドへの直接ジャンプ
+
+確認したいスライドに `initial: true` を設定すると、そのスライドから起動できる。
+
+```dart
+configuration: const FlutterDeckSlideConfiguration(
+  route: '/my-slide',
+  title: 'My Slide',
+  initial: true,  // ← これを追加
+),
+```
+
+**dart-mcp でホットリスタート:**
+1. DTD URIを取得
+   ```bash
+   ps aux | grep "dtd-uri" | grep -o 'ws://[^[:space:]]*' | head -1
+   ```
+   または VS Code コマンドパレット → `Dart: Copy DTD URI to Clipboard`
+
+2. dart-mcpで接続・リスタート
+   ```
+   mcp__dart-mcp__connect_dart_tooling_daemon: <DTD URI>
+   mcp__dart-mcp__hot_restart
+   ```
+
+> **注意**: VM Service URI（marionette用）と DTD URI（dart-mcp用）は別物。
+> 間違ったURIを使うと紛らわしいSDKバージョンエラーが出る。
+
+### アプリ起動コマンド（marionette接続不可時のみ）
 
 ```bash
 # Webでプレビュー
@@ -12,7 +70,11 @@ flutter run -d chrome
 
 # macOSでプレビュー
 flutter run -d macos
+```
 
+### その他のコマンド
+
+```bash
 # リリースビルド
 flutter build web --release
 flutter build macos --release
@@ -89,6 +151,30 @@ FlutterDeckSlideStepsBuilder(
 
 `lib/config/theme_config.dart`でカラースキーム変更可能。
 
+## 文字サイズガイドライン
+
+カンファレンス発表用の推奨文字サイズ（`theme_config.dart`で定義）：
+
+| 用途 | 推奨サイズ |
+|------|-----------|
+| Title/headers | 36-80pt |
+| Body text | 24-32pt |
+| **Minimum readable** | **20pt** |
+
+**定義済みテキストスタイル:**
+
+| スタイル | サイズ | 用途 |
+|----------|--------|------|
+| `display` | 103pt | 大見出し |
+| `header` | 57pt | ヘッダー |
+| `title` | 54pt | タイトル |
+| `subtitle` | 42pt | サブタイトル |
+| `bodyLarge` | 32pt | 本文（大） |
+| `bodyMedium` | 26pt | 本文（中） |
+| `bodySmall` | 22pt | 本文（小）・リンク等 |
+
+> **注意**: 20pt未満の文字は会場後方から読めないため使用禁止。
+
 ## キーボードショートカット
 
 - `→` / `←`: 次/前のスライド
@@ -107,4 +193,18 @@ static const String socialHandle = '@your_handle';
 
 ## GitHub Pagesへのデプロイ
 
-mainブランチにpushすると自動デプロイ。
+ブランチごとに登壇資料をデプロイできる。手動トリガー（`workflow_dispatch`）で実行。
+
+**仕組み:**
+- 各ブランチが `/<repo-name>/<branch-name>/` のサブディレクトリにデプロイされる
+- ルートページ（`/<repo-name>/`）にデプロイ済みプレゼン一覧が自動生成される
+- ブランチ名のスラッシュ等はハイフンに変換される
+
+**デプロイ手順:**
+1. GitHub Actionsの「Deploy Slides to GitHub Pages」ワークフローを開く
+2. 「Run workflow」からデプロイしたいブランチを選択して実行
+
+**初回セットアップ:**
+- リポジトリ Settings → Pages → Source を「Deploy from a branch」に設定
+- Branch: `gh-pages` / `/ (root)` を選択して保存
+

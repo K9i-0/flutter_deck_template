@@ -6,20 +6,23 @@
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "deviceId": "chrome"
+      "deviceId": "chrome",
+      "args": ["--disable-service-auth-codes", "--debug"]
     },
     {
       "name": "Flutter macOS",
       "type": "dart",
       "request": "launch",
       "program": "lib/main.dart",
-      "deviceId": "macos"
+      "deviceId": "macos",
+      "args": ["--disable-service-auth-codes", "--debug"]
     },
     {
       "name": "Flutter (default device)",
       "type": "dart",
       "request": "launch",
-      "program": "lib/main.dart"
+      "program": "lib/main.dart",
+      "args": ["--disable-service-auth-codes", "--debug"]
     }
   ]
 }

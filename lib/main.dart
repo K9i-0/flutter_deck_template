@@ -1,12 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deck/flutter_deck.dart';
+import 'package:marionette_flutter/marionette_flutter.dart';
 
 import 'config/presentation_config.dart';
 import 'config/speaker_info.dart';
 import 'config/theme_config.dart';
 import 'slides/slides.dart';
+import 'widgets/presentation_timer.dart';
 
 void main() {
+  if (kDebugMode) {
+    MarionetteBinding.ensureInitialized();
+  }
   runApp(const PresentationApp());
 }
 
@@ -15,41 +21,61 @@ class PresentationApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlutterDeckApp(
-      configuration: FlutterDeckConfiguration(
-        slideSize: PresentationConfig.slideSize,
-        transition: PresentationConfig.transition,
-        background: PresentationConfig.backgroundConfiguration,
-        header: PresentationConfig.headerConfiguration,
-        footer: PresentationConfig.footerConfiguration,
-        progressIndicator: PresentationConfig.progressIndicator,
-        marker: const FlutterDeckMarkerConfiguration(
-          color: Color(0xFFef4444),
-          strokeWidth: 4,
-        ),
-      ),
-      lightTheme: ThemeConfig.lightTheme,
-      darkTheme: ThemeConfig.darkTheme,
-      themeMode: ThemeMode.dark,
-      speakerInfo: SpeakerInfo.avatarPath != null
-          ? FlutterDeckSpeakerInfo(
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          FlutterDeckApp(
+            configuration: FlutterDeckConfiguration(
+              slideSize: PresentationConfig.slideSize,
+              transition: PresentationConfig.transition,
+              background: PresentationConfig.backgroundConfiguration,
+              header: PresentationConfig.headerConfiguration,
+              footer: PresentationConfig.footerConfiguration,
+              progressIndicator: PresentationConfig.progressIndicator,
+              marker: const FlutterDeckMarkerConfiguration(
+                color: ThemeConfig.accentBlue,
+                strokeWidth: 4,
+              ),
+            ),
+            lightTheme: ThemeConfig.lightTheme,
+            darkTheme: ThemeConfig.darkTheme,
+            themeMode: ThemeMode.dark,
+            speakerInfo: const FlutterDeckSpeakerInfo(
               name: SpeakerInfo.name,
               description: SpeakerInfo.description,
               socialHandle: SpeakerInfo.socialHandle,
-              imagePath: SpeakerInfo.avatarPath!,
-            )
-          : null,
-      slides: const [
-        TitleSlide(),
-        AboutSlide(),
-        FeaturesSlide(),
-        SlideTypesSlide(),
-        ClaudeIntegrationSlide(),
-        HowToUseSlide(),
-        // CodeHighlightSlide(),
-        // InteractiveCounterSlide(),
-        ThankYouSlide(),
-      ],
+              imagePath: SpeakerInfo.avatarPath,
+            ),
+            slides: const [
+              TitleSlide(),
+              SelfIntroSlide(),
+              AiDrivenDevSlide(),
+              AiPowerSlide(),
+              FeedbackLoopDefinitionSlide(),
+              DemoSlide(),
+              MainTopicSlide(),
+              UiVerificationArchitectureSlide(),
+              FlowComparisonSlide(),
+              McpToolsOverviewSlide(),
+              DartMcpComplementSlide(),
+              ApproachComparisonSlide(),
+              IosInternalsSlide(),
+              AndroidApproachesSlide(),
+              AccessibilityElementSlide(),
+              MarionetteVmServiceSlide(),
+              UiOperationComparisonSlide(),
+              McpSummarySlide(),
+              PracticalExperienceSlide(),
+              // AppSideRequirementsSlide(),
+              // ImplementationExampleSlide(),
+              // ComparisonTableSlide(),
+              // SummarySlide(),
+            ],
+          ),
+          const Positioned(top: 16, right: 16, child: PresentationTimer()),
+        ],
+      ),
     );
   }
 }
