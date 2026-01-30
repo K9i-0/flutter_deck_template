@@ -87,7 +87,7 @@ class _BeforeColumn extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         // Flow steps - 6行構造（After側と縦位置を揃える）
-        Expanded(
+        const Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -95,24 +95,24 @@ class _BeforeColumn extends StatelessWidget {
                 text: 'Planモードで仕様決定',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
+              _ArrowDown(),
               _FlowStep(
                 text: 'AIが実装',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
+              _ArrowDown(),
               _FlowStep(
                 text: 'lint等の最低限検証',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
-              const _EmptyStep(), // After側のAI UI検証に対応する空ステップ
-              const _ArrowDown(),
+              _ArrowDown(),
+              _EmptyStep(), // After側のAI UI検証に対応する空ステップ
+              _ArrowDown(),
               _FlowStep(
                 text: '人間が動作確認',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
+              _ArrowDown(),
               _WarningStep(text: '実装ミスが発覚'),
             ],
           ),
@@ -164,7 +164,7 @@ class _AfterColumn extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         // Flow steps
-        Expanded(
+        const Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -172,25 +172,25 @@ class _AfterColumn extends StatelessWidget {
                 text: 'Planモードで仕様決定',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
+              _ArrowDown(),
               _FlowStep(
                 text: 'AIが実装',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
+              _ArrowDown(),
               _FlowStep(
                 text: 'lint等の最低限検証',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
-              const _SuccessStep(text: 'AIがUI検証で確認'),
-              const _ArrowDown(),
+              _ArrowDown(),
+              _SuccessStep(text: 'AIがUI検証で確認'),
+              _ArrowDown(),
               _FlowStep(
                 text: '人間が動作確認',
                 color: ThemeConfig.textPrimary,
               ),
-              const _ArrowDown(),
-              const _SuccessStep(text: 'ミスは事前解消済み'),
+              _ArrowDown(),
+              _SuccessStep(text: 'ミスは事前解消済み'),
             ],
           ),
         ),
@@ -257,7 +257,7 @@ class _WarningStep extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.warning_amber_rounded,
             color: ThemeConfig.accentOrange,
             size: 28,
@@ -299,7 +299,7 @@ class _SuccessStep extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.check_circle,
             color: ThemeConfig.accentGreen,
             size: 28,
@@ -388,7 +388,7 @@ class _ConclusionMessage extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.lightbulb_outline,
             color: ThemeConfig.accentGreen,
             size: 32,
