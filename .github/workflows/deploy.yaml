@@ -2,6 +2,11 @@ name: Deploy Slides to GitHub Pages
 
 on:
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -14,8 +19,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current branch
+      - name: Checkout target branch
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
 
       - name: Checkout gh-pages branch
         uses: actions/checkout@v4
@@ -36,7 +43,7 @@ jobs:
       - name: Determine deploy directory
         id: dir
         run: |
-          DIR_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          DIR_NAME=$(echo "${{ inputs.branch }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
           echo "name=${DIR_NAME}" >> "$GITHUB_OUTPUT"
 
       - name: Build web
@@ -48,7 +55,7 @@ jobs:
         env:
           DIR_NAME: ${{ steps.dir.outputs.name }}
           REPO_NAME: ${{ github.event.repository.name }}
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ inputs.branch }}
         run: |
           mkdir -p _site
 
