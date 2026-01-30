@@ -193,5 +193,18 @@ static const String socialHandle = '@your_handle';
 
 ## GitHub Pagesへのデプロイ
 
-mainブランチにpushすると自動デプロイ。
+ブランチごとに登壇資料をデプロイできる。手動トリガー（`workflow_dispatch`）で実行。
+
+**仕組み:**
+- 各ブランチが `/<repo-name>/<branch-name>/` のサブディレクトリにデプロイされる
+- ルートページ（`/<repo-name>/`）にデプロイ済みプレゼン一覧が自動生成される
+- ブランチ名のスラッシュ等はハイフンに変換される
+
+**デプロイ手順:**
+1. GitHub Actionsの「Deploy Slides to GitHub Pages」ワークフローを開く
+2. 「Run workflow」からデプロイしたいブランチを選択して実行
+
+**初回セットアップ:**
+- リポジトリ Settings → Pages → Source を「Deploy from a branch」に設定
+- Branch: `gh-pages` / `/ (root)` を選択して保存
 
