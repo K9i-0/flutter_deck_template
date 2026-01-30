@@ -202,7 +202,10 @@ static const String socialHandle = '@your_handle';
 
 **デプロイ手順:**
 1. GitHub Actionsの「Deploy Slides to GitHub Pages」ワークフローを開く
-2. 「Run workflow」からデプロイしたいブランチを選択して実行
+2. 「Run workflow」をクリック（**mainブランチから実行**）
+3. 「Branch to deploy」にデプロイしたいブランチ名を入力して実行
+
+> **注意**: ワークフローは常にmainから実行する。対象ブランチにワークフローを取り込む必要はない。
 
 **初回セットアップ:**
 - リポジトリ Settings → Pages → Source を「Deploy from a branch」に設定
