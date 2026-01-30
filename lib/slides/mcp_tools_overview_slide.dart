@@ -30,7 +30,7 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     context,
                     name: 'Maestro MCP',
                     developer: 'Mobile Dev, Inc.',
-                    icon: Icons.music_note,
+                    icon: Icons.play_circle_outline,
                     color: ThemeConfig.accentOrange,
                     features: [
                       'iOS / Android',
@@ -46,7 +46,7 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     context,
                     name: 'Mobile MCP',
                     developer: 'Mobile Next',
-                    icon: Icons.phone_android,
+                    icon: Icons.rocket_launch_outlined,
                     color: ThemeConfig.accentGreen,
                     features: [
                       'iOS / Android',
@@ -62,7 +62,7 @@ class McpToolsOverviewSlide extends FlutterDeckSlideWidget {
                     context,
                     name: 'Marionette MCP',
                     developer: 'LeanCode',
-                    icon: Icons.desktop_mac,
+                    icon: Icons.flutter_dash,
                     color: ThemeConfig.accentBlue,
                     features: [
                       '全プラットフォーム対応',

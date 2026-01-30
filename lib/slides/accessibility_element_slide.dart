@@ -10,7 +10,7 @@ class AccessibilityElementSlide extends FlutterDeckSlideWidget {
             route: '/accessibility-element',
             title: 'Accessibility Element',
             header:
-                FlutterDeckHeaderConfiguration(title: '外部アプローチのUI要素取得'),
+                FlutterDeckHeaderConfiguration(title: '外部アプローチ：UI要素取得'),
           ),
         );
 
