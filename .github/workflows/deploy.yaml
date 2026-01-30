@@ -1,33 +1,38 @@
-name: Deploy to GitHub Pages
+name: Deploy Slides to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        type: string
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout target branch
         uses: actions/checkout@v4
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.0'
-          channel: 'stable'
-          cache: true
+          ref: ${{ inputs.branch }}
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: _gh-pages
+        continue-on-error: true
+
+      - name: Setup tools via mise
+        uses: jdx/mise-action@v2
 
       - name: Get dependencies
         run: flutter pub get
@@ -35,24 +40,117 @@ jobs:
       - name: Analyze
         run: flutter analyze
 
+      - name: Determine deploy directory
+        id: dir
+        run: |
+          DIR_NAME=$(echo "${{ inputs.branch }}" | sed 's/[^a-zA-Z0-9._-]/-/g')
+          echo "name=${DIR_NAME}" >> "$GITHUB_OUTPUT"
+
       - name: Build web
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+        run: |
+          flutter build web --release \
+            --base-href "/${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}/"
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Prepare deployment
+        env:
+          DIR_NAME: ${{ steps.dir.outputs.name }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          BRANCH_NAME: ${{ inputs.branch }}
+        run: |
+          mkdir -p _site
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: 'build/web'
+          # Restore existing gh-pages content if available
+          if [ -d "_gh-pages" ] && [ "$(ls -A _gh-pages 2>/dev/null)" ]; then
+            rsync -a --exclude='.git' _gh-pages/ _site/
+          fi
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
+          # Deploy current branch build to its subdirectory
+          rm -rf "_site/${DIR_NAME}"
+          mkdir -p "_site/${DIR_NAME}"
+          cp -r build/web/* "_site/${DIR_NAME}/"
+
+          # Record branch metadata for index generation
+          mkdir -p _site/.meta
+          echo "${BRANCH_NAME}" > "_site/.meta/${DIR_NAME}"
+
+          # Ensure Jekyll is disabled
+          touch _site/.nojekyll
+
+          # Generate root index.html listing all presentations
+          ITEMS=""
+          for meta_file in _site/.meta/*; do
+            [ -f "$meta_file" ] || continue
+            dir_name=$(basename "$meta_file")
+            branch_name=$(cat "$meta_file")
+            ITEMS="${ITEMS}<a href=\"/${REPO_NAME}/${dir_name}/\" class=\"card\"><div class=\"card-title\">${branch_name}</div><div class=\"card-path\">/${REPO_NAME}/${dir_name}/</div></a>"
+          done
+
+          cat > _site/index.html << HTMLEOF
+          <!DOCTYPE html>
+          <html lang="ja">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Presentations</title>
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+                background: #1a1a2e;
+                color: #e0e0e0;
+                min-height: 100vh;
+                padding: 3rem 2rem;
+              }
+              h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 2rem;
+                color: #ffffff;
+              }
+              .cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+                gap: 1.2rem;
+              }
+              .card {
+                display: block;
+                background: #16213e;
+                border: 1px solid #2a2a4a;
+                border-radius: 12px;
+                padding: 1.5rem;
+                text-decoration: none;
+                color: inherit;
+                transition: border-color 0.2s, transform 0.2s;
+              }
+              .card:hover {
+                border-color: #6366f1;
+                transform: translateY(-2px);
+              }
+              .card-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: #c7d2fe;
+                margin-bottom: 0.5rem;
+                word-break: break-all;
+              }
+              .card-path {
+                font-size: 0.85rem;
+                color: #6b7280;
+                font-family: monospace;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>Presentations</h1>
+            <div class="cards">
+              ${ITEMS}
+            </div>
+          </body>
+          </html>
+          HTMLEOF
+
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
