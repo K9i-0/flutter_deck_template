@@ -53,7 +53,7 @@ class PresentationApp extends StatelessWidget {
               AiDrivenDevSlide(),
               AiPowerSlide(),
               FeedbackLoopDefinitionSlide(),
-              DemoSlide(),
+              // DemoSlide(),
               MainTopicSlide(),
               UiVerificationArchitectureSlide(),
               FlowComparisonSlide(),
