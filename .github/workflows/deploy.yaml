@@ -24,12 +24,8 @@ jobs:
           path: _gh-pages
         continue-on-error: true
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.32.0'
-          channel: 'stable'
-          cache: true
+      - name: Setup tools via mise
+        uses: jdx/mise-action@v2
 
       - name: Get dependencies
         run: flutter pub get
