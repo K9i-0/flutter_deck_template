@@ -6,9 +6,20 @@ Flutter Deckを使った登壇スライドテンプレート。Claude Codeと連
 
 - **flutter_deck**ベースの美しいスライド
 - **Claude Code**のスキル機能によるスライド自動生成
-- **GitHub Pages**への自動デプロイ
+- **GitHub Pages**へのデプロイ（手動トリガー）
 - ダーク/ライトテーマ対応
 - 豊富なスライドテンプレート
+
+## 運用方法
+
+`main`ブランチはテンプレートとして維持し、各プレゼンテーションは専用ブランチで作成します。
+
+```
+main（テンプレート）
+├── fluttergakkai_9（発表1）
+├── my_conference_2025（発表2）
+└── internal_lt（発表3）
+```
 
 ## クイックスタート
 
@@ -96,12 +107,19 @@ static const String socialHandle = '@your_handle';
 
 ## デプロイ
 
-mainブランチにpushすると、GitHub Actionsが自動的にGitHub Pagesにデプロイします。
+GitHub Actionsの手動トリガー（`workflow_dispatch`）でGitHub Pagesにデプロイします。ブランチごとにサブディレクトリにデプロイされます。
 
-### GitHub Pagesの設定
+### デプロイ手順
+
+1. GitHub Actionsの「Deploy Slides to GitHub Pages」ワークフローを開く
+2. 「Run workflow」をクリック（**mainブランチから実行**）
+3. 「Branch to deploy」にデプロイしたいブランチ名を入力して実行
+
+### GitHub Pagesの初回設定
 
 1. リポジトリの Settings → Pages に移動
-2. Source を「GitHub Actions」に設定
+2. Source を「Deploy from a branch」に設定
+3. Branch: `gh-pages` / `/ (root)` を選択して保存
 
 ## ライセンス
 

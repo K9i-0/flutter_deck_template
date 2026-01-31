@@ -5,22 +5,21 @@ class SpeakerInfo {
   SpeakerInfo._();
 
   /// Speaker's display name.
-  static const String name = 'K9i a.k.a. たこさん';
+  static const String name = 'Your Name';
 
   /// Speaker's description or title.
-  static const String description = 'アクセンチュア株式会社 ゆめみ Flutterエンジニア';
+  static const String description = 'Your Title / Company';
 
   /// Speaker's social handle (e.g., @username).
-  static const String socialHandle = '@K9i_apps';
+  static const String socialHandle = '@your_handle';
 
   /// Speaker's avatar image path (optional).
-  /// Set to null if no avatar is available.
+  /// Place your avatar image in assets/images/ and update this path.
   static const String avatarPath = 'assets/images/avatar.png';
 
   /// Presentation title.
-  static const String presentationTitle =
-      'MCPでFlutterアプリのUI検証フィードバックループを回そう';
+  static const String presentationTitle = 'Presentation Title';
 
   /// Presentation subtitle.
-  static const String presentationSubtitle = '第9回 FlutterGakkai';
+  static const String presentationSubtitle = 'Event Name / Date';
 }
