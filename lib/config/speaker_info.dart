@@ -5,13 +5,13 @@ class SpeakerInfo {
   SpeakerInfo._();
 
   /// Speaker's display name.
-  static const String name = 'Your Name';
+  static const String name = 'K9i a.k.a. たこさん';
 
   /// Speaker's description or title.
-  static const String description = 'Your Title / Company';
+  static const String description = 'アクセンチュア株式会社 ゆめみ Flutterエンジニア';
 
   /// Speaker's social handle (e.g., @username).
-  static const String socialHandle = '@your_handle';
+  static const String socialHandle = '@K9i_apps';
 
   /// Speaker's avatar image path (optional).
   /// Place your avatar image in assets/images/ and update this path.
