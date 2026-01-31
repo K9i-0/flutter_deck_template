@@ -54,7 +54,8 @@ jobs:
 
       - name: Capture OGP image
         run: |
-          npx -y playwright install --with-deps chromium
+          npm install playwright
+          npx playwright install --with-deps chromium
           npx -y http-server build/web -p 8080 &
           sleep 2
           node -e "
