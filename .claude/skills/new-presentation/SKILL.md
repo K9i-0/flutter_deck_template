@@ -1,7 +1,7 @@
 ---
 name: new-presentation
 description: 新しいプレゼンテーションの企画・構成を支援。「新しいプレゼン」「プレゼン作成」「発表準備」「登壇準備」などで発動。
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash(flutter:*)
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git:*), Bash(flutter:*)
 ---
 
 # Presentation Planning Skill
@@ -10,6 +10,25 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash(flutter:*)
 AskUserQuestionで徹底的に質問し、発表時間やテーマに合わせた最適なスライド構成を提案する。
 
 ## 作業フロー
+
+### Phase 0: ブランチ作成
+
+mainブランチからプレゼン専用ブランチを作成する。
+
+1. 現在のブランチを確認
+2. mainブランチでない場合は警告
+3. ブランチ名をユーザーに確認（例: `fluttergakkai_10`, `my_conference_2025`）
+4. `git checkout -b <branch_name>` でブランチ作成
+
+```
+Header: "Branch"
+Question: "プレゼン用ブランチ名を教えてください（例: fluttergakkai_10）"
+Options:
+  - イベント名で自動生成: イベント名からブランチ名を提案
+  - 手動入力: 自分でブランチ名を指定
+```
+
+> **注意**: 既にプレゼン用ブランチにいる場合はこのフェーズをスキップする。
 
 ### Phase 1: 基本情報収集
 
@@ -176,10 +195,19 @@ Options:
 
 承認後、以下を実行：
 
-1. `lib/slides/` に各スライドファイルを作成
-2. `lib/slides/slides.dart` のバレルファイルを更新
-3. `lib/main.dart` の slides リストを更新
-4. 選択されたテーマを `lib/config/theme_config.dart` に反映（必要な場合）
+1. `lib/config/speaker_info.dart` を更新（名前、肩書き、タイトル等）
+2. `lib/slides/` に各スライドファイルを作成
+3. `lib/slides/slides.dart` のバレルファイルを更新
+4. `lib/main.dart` の slides リストを更新
+5. 選択されたテーマを `lib/config/theme_config.dart` に反映（必要な場合）
+
+### Phase 6: 次のステップ案内
+
+生成完了後、以下を案内する：
+
+- `/flutter-deck-slide` で個別スライドの追加・編集が可能
+- `/update-ogp` でOGPメタタグの更新を推奨
+- `/preview-slides` でプレビュー確認を推奨
 
 ## スライドテンプレート参照
 

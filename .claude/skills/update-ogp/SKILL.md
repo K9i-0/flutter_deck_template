@@ -33,6 +33,16 @@ allowed-tools: Read, Edit, Glob
 | `og:title` | `SpeakerInfo.presentationTitle` | MCPでFlutterアプリの... |
 | `og:description` | `{SpeakerInfo.name} \| {SpeakerInfo.presentationSubtitle}` | K9i a.k.a. たこさん \| 第9回 FlutterGakkai |
 
+### 3. 更新後の確認
+
+OGP更新後、以下を案内する：
+
+- **ローカル確認**: ブラウザのDevToolsでmetaタグを確認
+- **デプロイ後確認**: [OGP確認ツール](https://ogp.me/) や各SNSのデバッガーで確認
+  - Twitter: [Card Validator](https://cards-dev.twitter.com/validator)
+  - Facebook: [Sharing Debugger](https://developers.facebook.com/tools/debug/)
+- **OGP画像**: CIで自動生成されるため `og:image` の変更は不要
+
 ### 注意事項
 
 - `og:image` はCIで自動設定されるため変更しない

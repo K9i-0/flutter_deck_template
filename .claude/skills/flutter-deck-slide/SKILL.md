@@ -1,7 +1,7 @@
 ---
 name: flutter-deck-slide
 description: flutter_deckでプレゼンテーションスライドを作成・編集。「スライドを追加」「新しいスライド」「スライドを編集」「テーマ変更」「コード挿入」「画像追加」「プレビュー」などで発動。
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash(flutter:*)
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash(flutter:*), mcp__marionette__connect, mcp__marionette__take_screenshots, mcp__marionette__tap, mcp__marionette__hot_reload
 ---
 
 # Flutter Deck Slide Skill
@@ -43,6 +43,45 @@ export 'NN_descriptive_name_slide.dart';
 #### 2.4 main.dartにスライド追加
 
 `lib/main.dart`のslidesリストに追加。
+
+### 3. プレビュー提案
+
+スライド追加・編集後、以下を提案する：
+- 「marionette MCPでプレビューを確認しますか？」
+- 接続済みならホットリロード → スクリーンショット取得
+- 未接続なら接続手順を案内
+
+## テキストサイズガイドライン
+
+> **重要**: カンファレンス発表ではフォントサイズ **20pt以上** を必ず使用すること。
+> 20pt未満は会場後方から読めないため使用禁止。
+
+| スタイル | サイズ | 用途 |
+|----------|--------|------|
+| `display` | 103pt | 大見出し |
+| `header` | 57pt | ヘッダー |
+| `title` | 54pt | タイトル |
+| `subtitle` | 42pt | サブタイトル |
+| `bodyLarge` | 32pt | 本文（大） |
+| `bodyMedium` | 26pt | 本文（中） |
+| `bodySmall` | 22pt | 本文（小）最小推奨 |
+
+カスタムTextStyleを使う場合も `fontSize: 20` 以上を維持する。
+
+## 画像配置ガイドライン
+
+- 画像は `assets/images/` に配置する
+- `pubspec.yaml` の assets セクションに登録が必要
+- 大きすぎる画像は事前にリサイズを推奨（1920x1080程度）
+- SVGを使う場合は `flutter_svg` パッケージの追加が必要
+
+```dart
+// 画像表示例
+Image.asset(
+  'assets/images/my_image.png',
+  fit: BoxFit.contain,
+)
+```
 
 ## スライドテンプレート
 
@@ -280,16 +319,4 @@ theme.textTheme.header
 theme.textTheme.bodyLarge
 theme.textTheme.bodyMedium
 theme.textTheme.bodySmall
-```
-
-## プレビューコマンド
-
-```bash
-flutter run -d chrome
-```
-
-## ビルドコマンド
-
-```bash
-flutter build web --release
 ```

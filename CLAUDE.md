@@ -4,6 +4,30 @@
 
 flutter_deckを使用した登壇スライドテンプレート。Claude Codeと連携してスライドを簡単に作成・編集できる。
 
+**ブランチ運用:**
+- `main` はテンプレートとして維持（プレゼン固有コンテンツは含めない）
+- 各プレゼンテーションはmainから専用ブランチを作成して開発する
+
+## 新しいプレゼンの始め方
+
+1. **ブランチ作成**: `git checkout -b <event_name>` （mainから分岐）
+2. **スキル使用**: `/new-presentation` で構成を企画
+3. **登壇者情報更新**: `lib/config/speaker_info.dart` を編集
+4. **スライド追加**: `/flutter-deck-slide` でスライドを作成
+5. **OGP更新**: `/update-ogp` でメタタグを更新
+6. **プレビュー**: `/preview-slides` でスライドを確認
+7. **デプロイ**: `/deploy-presentation` でGitHub Pagesに公開
+
+## スキル一覧
+
+| スキル | 発動ワード | 用途 |
+|--------|-----------|------|
+| `/new-presentation` | 新しいプレゼン、発表準備 | プレゼン企画・構成支援 |
+| `/flutter-deck-slide` | スライド追加、スライド編集 | スライド作成・編集 |
+| `/update-ogp` | OGP更新、OGP設定 | OGPメタタグ更新 |
+| `/preview-slides` | プレビュー、スクリーンショット | スライドプレビュー・確認 |
+| `/deploy-presentation` | デプロイ、公開、GitHub Pages | デプロイ支援 |
+
 ## 動作確認・開発
 
 > **重要**: 動作確認は **marionette MCP** を優先して使用すること。
@@ -210,4 +234,3 @@ static const String socialHandle = '@your_handle';
 **初回セットアップ:**
 - リポジトリ Settings → Pages → Source を「Deploy from a branch」に設定
 - Branch: `gh-pages` / `/ (root)` を選択して保存
-
