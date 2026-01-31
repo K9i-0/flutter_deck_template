@@ -57,11 +57,18 @@ jobs:
           npx -y playwright install --with-deps chromium
           npx -y http-server build/web -p 8080 &
           sleep 2
-          npx playwright screenshot \
-            --viewport-size=1200,630 \
-            --wait-for-timeout=5000 \
-            "http://localhost:8080" \
-            build/web/ogp.png
+          node -e "
+            const { chromium } = require('playwright');
+            (async () => {
+              const browser = await chromium.launch();
+              const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
+              await page.goto('http://localhost:8080');
+              await page.waitForSelector('#loading', { state: 'hidden', timeout: 30000 });
+              await page.waitForTimeout(2000);
+              await page.screenshot({ path: 'build/web/ogp.png' });
+              await browser.close();
+            })();
+          "
           kill %1
 
       - name: Set OGP absolute URL
