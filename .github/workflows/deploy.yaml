@@ -53,17 +53,21 @@ jobs:
             --base-href "/${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}/"
 
       - name: Capture OGP image
+        env:
+          BASE_HREF: /${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}/
         run: |
           npm install playwright http-server
           npx playwright install --with-deps chromium
-          npx http-server build/web -p 8080 &
-          for i in $(seq 1 30); do curl -s http://localhost:8080 > /dev/null && break; sleep 1; done
+          mkdir -p "build/serve${BASE_HREF}"
+          cp -r build/web/* "build/serve${BASE_HREF}"
+          npx http-server build/serve -p 8080 &
+          for i in $(seq 1 30); do curl -s "http://localhost:8080${BASE_HREF}" > /dev/null && break; sleep 1; done
           node -e "
             const { chromium } = require('playwright');
             (async () => {
               const browser = await chromium.launch();
               const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-              await page.goto('http://localhost:8080');
+              await page.goto('http://localhost:8080${BASE_HREF}');
               await page.waitForSelector('#loading', { state: 'hidden', timeout: 30000 });
               await page.waitForTimeout(2000);
               await page.screenshot({ path: 'build/web/ogp.png' });
