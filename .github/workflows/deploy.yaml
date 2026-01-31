@@ -54,10 +54,10 @@ jobs:
 
       - name: Capture OGP image
         run: |
-          npm install playwright
+          npm install playwright http-server
           npx playwright install --with-deps chromium
-          npx -y http-server build/web -p 8080 &
-          sleep 2
+          npx http-server build/web -p 8080 &
+          for i in $(seq 1 30); do curl -s http://localhost:8080 > /dev/null && break; sleep 1; done
           node -e "
             const { chromium } = require('playwright');
             (async () => {
