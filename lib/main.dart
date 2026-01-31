@@ -16,6 +16,8 @@ void main() {
   runApp(const PresentationApp());
 }
 
+const showTimer = bool.fromEnvironment('SHOW_TIMER', defaultValue: true);
+
 class PresentationApp extends StatelessWidget {
   const PresentationApp({super.key});
 
@@ -73,7 +75,12 @@ class PresentationApp extends StatelessWidget {
               // SummarySlide(),
             ],
           ),
-          const Positioned(top: 16, right: 16, child: PresentationTimer()),
+          if (showTimer)
+            const Positioned(
+              top: 16,
+              right: 16,
+              child: PresentationTimer(),
+            ),
         ],
       ),
     );
