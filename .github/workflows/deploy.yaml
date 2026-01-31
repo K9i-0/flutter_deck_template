@@ -52,6 +52,23 @@ jobs:
             --dart-define=SHOW_TIMER=false \
             --base-href "/${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}/"
 
+      - name: Capture OGP image
+        run: |
+          npx -y playwright install --with-deps chromium
+          npx -y http-server build/web -p 8080 &
+          sleep 2
+          npx playwright screenshot \
+            --viewport-size=1200,630 \
+            --wait-for-timeout=5000 \
+            "http://localhost:8080" \
+            build/web/ogp.png
+          kill %1
+
+      - name: Set OGP absolute URL
+        run: |
+          SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}"
+          sed -i "s|content=\"ogp.png\"|content=\"${SITE_URL}/ogp.png\"|" build/web/index.html
+
       - name: Prepare deployment
         env:
           DIR_NAME: ${{ steps.dir.outputs.name }}
