@@ -52,6 +52,35 @@ jobs:
             --dart-define=SHOW_TIMER=false \
             --base-href "/${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}/"
 
+      - name: Capture OGP image
+        env:
+          BASE_HREF: /${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}/
+        run: |
+          npm install playwright http-server
+          npx playwright install --with-deps chromium
+          mkdir -p "build/serve${BASE_HREF}"
+          cp -r build/web/* "build/serve${BASE_HREF}"
+          npx http-server build/serve -p 8080 &
+          for i in $(seq 1 30); do curl -s "http://localhost:8080${BASE_HREF}" > /dev/null && break; sleep 1; done
+          node -e "
+            const { chromium } = require('playwright');
+            (async () => {
+              const browser = await chromium.launch();
+              const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
+              await page.goto('http://localhost:8080${BASE_HREF}');
+              await page.waitForSelector('flutter-view', { timeout: 60000 });
+              await page.waitForTimeout(3000);
+              await page.screenshot({ path: 'build/web/ogp.png' });
+              await browser.close();
+            })();
+          "
+          kill %1
+
+      - name: Set OGP absolute URL
+        run: |
+          SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ steps.dir.outputs.name }}"
+          sed -i "s|content=\"ogp.png\"|content=\"${SITE_URL}/ogp.png\"|" build/web/index.html
+
       - name: Prepare deployment
         env:
           DIR_NAME: ${{ steps.dir.outputs.name }}
