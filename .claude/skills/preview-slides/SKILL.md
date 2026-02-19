@@ -1,7 +1,7 @@
 ---
 name: preview-slides
 description: スライドのプレビュー・確認。「プレビュー」「スライド確認」「スクリーンショット」「全スライド確認」などで発動。
-allowed-tools: Read, Glob, Bash(lsof:*), mcp__marionette__connect, mcp__marionette__take_screenshots, mcp__marionette__get_interactive_elements, mcp__marionette__tap, mcp__marionette__hot_reload, mcp__marionette__disconnect
+allowed-tools: Read, Glob, Bash(lsof:*), mcp__marionette__connect, mcp__marionette__take_screenshots, mcp__marionette__get_interactive_elements, mcp__marionette__tap, mcp__marionette__hot_reload, mcp__marionette__disconnect, mcp__marionette__call_custom_extension
 ---
 
 # Preview Slides Skill
@@ -30,28 +30,41 @@ lsof -i -P -n | grep flutter_d | grep LISTEN
 
 - **次のスライド**: `mcp__marionette__tap` with `key: "nav_next"`
 - **前のスライド**: `mcp__marionette__tap` with `key: "nav_previous"`
+- **特定スライドにジャンプ**: `mcp__marionette__call_custom_extension` で直接移動（後述）
 
 ### 4. 全スライド一括プレビュー
 
 ユーザーが「全スライド」や「一括」と言った場合：
 
-1. `lib/main.dart` からスライド数を確認
-2. 最初のスライドに移動（必要に応じてアプリ再起動）
-3. 各スライドのスクリーンショットを取得しながら順番に進める
+1. `call_custom_extension` でスライド情報を取得
+   ```
+   extension: "deckNavigation.getSlideInfo"
+   → { currentSlide: 1, slideCount: N }
+   ```
+2. スライド1にジャンプ（必要な場合）
+   ```
+   extension: "deckNavigation.goToSlide"
+   args: { slideNumber: "1" }
+   ```
+3. 各スライドのスクリーンショットを取得しながら `nav_next` で進める
 4. ステップがあるスライドは全ステップ分進める
-
-```
-for each slide:
-  take_screenshots
-  tap key: "nav_next"
-```
 
 ### 5. 特定スライドへのジャンプ
 
-特定のスライドを確認したい場合：
-1. `lib/slides/slides.dart` と `lib/main.dart` からスライド一覧を取得
-2. 目的のスライドまで nav_next/nav_previous で移動
-3. または `initial: true` を設定してホットリスタートで直接ジャンプ
+`call_custom_extension` を使って直接ジャンプできる：
+
+```
+# スライド情報を取得
+mcp__marionette__call_custom_extension:
+  extension: "deckNavigation.getSlideInfo"
+
+# n枚目のスライドにジャンプ
+mcp__marionette__call_custom_extension:
+  extension: "deckNavigation.goToSlide"
+  args: { slideNumber: "3" }
+```
+
+> **注意**: `args` の値はすべて文字列で渡す（VM Service Extensionの制約）。
 
 ## コマンド一覧
 
@@ -60,6 +73,8 @@ for each slide:
 | スクリーンショット | `mcp__marionette__take_screenshots` |
 | 次のスライド | `mcp__marionette__tap` key: `nav_next` |
 | 前のスライド | `mcp__marionette__tap` key: `nav_previous` |
+| スライド情報取得 | `mcp__marionette__call_custom_extension` extension: `deckNavigation.getSlideInfo` |
+| 特定スライドにジャンプ | `mcp__marionette__call_custom_extension` extension: `deckNavigation.goToSlide` args: `{ slideNumber: "N" }` |
 | ホットリロード | `mcp__marionette__hot_reload` |
 
 ## 注意事項
@@ -67,3 +82,4 @@ for each slide:
 - ナビゲーションボタンは `kDebugMode` の時のみ表示される
 - VS Codeから起動していれば `--disable-service-auth-codes` が自動付与される
 - ホットリロード後はスクリーンショットを再取得して変更を確認する
+- `call_custom_extension` は汎用ツールで、`ext.flutter.` プレフィックスは自動付与される

@@ -10,6 +10,9 @@ class SlideNavigation {
 
   static VoidCallback? _goNext;
   static VoidCallback? _goPrevious;
+  static void Function(int)? _goToSlide;
+  static int Function()? _slideCount;
+  static int Function()? _currentSlide;
 
   /// Navigate to the next slide.
   static void next() => _goNext?.call();
@@ -17,11 +20,23 @@ class SlideNavigation {
   /// Navigate to the previous slide.
   static void previous() => _goPrevious?.call();
 
+  /// Navigate to a specific slide by number (1-based).
+  static void goToSlide(int slideNumber) => _goToSlide?.call(slideNumber);
+
+  /// Returns the total number of slides.
+  static int get slideCount => _slideCount?.call() ?? 0;
+
+  /// Returns the current slide number (1-based).
+  static int get currentSlide => _currentSlide?.call() ?? 0;
+
   /// Register navigation callbacks from FlutterDeck context.
   static void register(BuildContext context) {
     final flutterDeck = FlutterDeck.of(context);
     _goNext = () => flutterDeck.next();
     _goPrevious = () => flutterDeck.previous();
+    _goToSlide = (n) => flutterDeck.goToSlide(n);
+    _slideCount = () => flutterDeck.router.slides.length;
+    _currentSlide = () => flutterDeck.slideNumber;
   }
 
   /// Check if navigation is available.

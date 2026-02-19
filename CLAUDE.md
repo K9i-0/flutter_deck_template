@@ -60,6 +60,26 @@ flutter_deckを使用した登壇スライドテンプレート。Claude Codeと
 
 ### 特定スライドへの直接ジャンプ
 
+#### 方法1: VM Service Extension（推奨）
+
+marionette MCPの `call_custom_extension` で直接ジャンプできる。
+
+```
+# スライド情報を取得
+mcp__marionette__call_custom_extension:
+  extension: "deckNavigation.getSlideInfo"
+→ {"status":"Success","currentSlide":1,"slideCount":3}
+
+# 3枚目のスライドにジャンプ
+mcp__marionette__call_custom_extension:
+  extension: "deckNavigation.goToSlide"
+  args: { slideNumber: "3" }
+```
+
+> **注意**: `args` の値はすべて文字列で渡す（VM Service Extensionの制約）。
+
+#### 方法2: initial: true + ホットリスタート
+
 確認したいスライドに `initial: true` を設定すると、そのスライドから起動できる。
 
 ```dart
